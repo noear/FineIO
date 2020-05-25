@@ -1,6 +1,6 @@
-package org.noear.fine.nio;
+package org.noear.fineio.nio;
 
-import org.noear.fine.NetSession;
+import org.noear.fineio.NetSession;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

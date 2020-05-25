@@ -1,23 +1,23 @@
-package org.noear.fine.extension;
+package org.noear.fineio.extension;
 
-import org.noear.fine.NetProcessor;
-import org.noear.fine.NetSession;
+import org.noear.fineio.SessionProcessor;
+import org.noear.fineio.NetSession;
 
 import java.util.ArrayList;
 
 /**
  * 消息处理组
  * */
-public class MessageProcessorGroup<T> implements NetProcessor<T> {
-    private ArrayList<NetProcessor<T>> group = new ArrayList<>();
+public class MessageProcessorGroup<T> implements SessionProcessor<T> {
+    private ArrayList<SessionProcessor<T>> group = new ArrayList<>();
 
-    public void append(NetProcessor<T> processor) {
+    public void append(SessionProcessor<T> processor) {
         group.add(processor);
     }
 
     @Override
     public void process(NetSession<T> session) {
-        for (NetProcessor<T> processor : group) {
+        for (SessionProcessor<T> processor : group) {
             processor.process(session);
         }
     }
