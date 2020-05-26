@@ -1,6 +1,6 @@
 package org.noear.fineio;
 
-public final class FineIO {
+public final class FineNIO {
     public static <T> NetClient<T> client(Protocol<T> protocol, SessionProcessor<T> processor) {
         return NetClient.nio(protocol, processor);
     }
