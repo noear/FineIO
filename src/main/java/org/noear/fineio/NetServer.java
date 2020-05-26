@@ -35,7 +35,7 @@ public abstract class NetServer<T> {
      * 停止
      */
     public void stop() {
-        _stop = true;
+        stopped = true;
     }
-    protected boolean _stop = false;
+    protected boolean stopped = false;
 }

@@ -12,7 +12,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 public class NioServer<T> extends NetServer<T> {
-    private ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+    private ByteBuffer buffer = ByteBuffer.allocate(1024);
     private Selector selector;
 
     /**
@@ -31,34 +31,43 @@ public class NioServer<T> extends NetServer<T> {
         startDo();
     }
 
-    private void startDo(){
-        new Thread(()->{
-            while (!_stop){
-                try {
-                    if (selector.select(1000) < 1) {
-                        continue;
-                    }
+    private void startDo() {
+        while (!stopped) {
+            try {
+                selector.select();
+                Iterator<SelectionKey> keyS = selector.selectedKeys().iterator();
 
-                    Iterator<SelectionKey> keyS = selector.selectedKeys().iterator();
+                while (keyS.hasNext()) {
+                    SelectionKey key = keyS.next();
+                    keyS.remove();
 
-                    while (keyS.hasNext()) {
-                        SelectionKey key = keyS.next();
-                        keyS.remove();
-
-                        if (key.isValid() == false) {
-                            continue;
-                        }
-
+                    try {
                         selectDo(key);
+                    }catch (Throwable ex) {
+                        if (key != null && key.channel() != null) {
+                            key.channel().close();
+                        }
                     }
-                }catch (Throwable ex){
-                    ex.printStackTrace();
                 }
+            } catch (Throwable ex) {
+                ex.printStackTrace();
             }
-        }).start();
+        }
+
+        if(selector != null){
+            try {
+                selector.close();
+            }catch (Throwable ex){
+                ex.printStackTrace();
+            }
+        }
     }
 
     private void selectDo(SelectionKey key) throws IOException {
+        if (key == null || key.isValid() == false) {
+            return;
+        }
+
         if (key.isAcceptable()) {
             ServerSocketChannel server = (ServerSocketChannel) key.channel();
             SocketChannel channel = server.accept();
@@ -75,18 +84,26 @@ public class NioServer<T> extends NetServer<T> {
             SocketChannel channel = (SocketChannel) key.channel();
 
             buffer.clear();
-            channel.read(buffer);
-            buffer.flip();
+            int size = channel.read(buffer);
 
-            T message = protocol.decode(buffer);
+            if(size > 0) {
+                buffer.flip();
 
-            if(message != null) {
-                //
-                //如果message没有问题，则执行处理
-                //
-                NioSession<T> session = new NioSession<>(channel, message);
+                T message = protocol.decode(buffer);
 
-                processor.process(session);
+                if (message != null) {
+                    //
+                    //如果message没有问题，则执行处理
+                    //
+                    NioSession<T> session = new NioSession<>(channel, message);
+
+                    processor.process(session);
+                }
+            }
+
+            if(size < 0){
+                key.cancel();
+                channel.close();
             }
         }
     }

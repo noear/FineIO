@@ -27,6 +27,13 @@ public abstract class NetSession<T> {
      * */
     public abstract void writeAndFlush(ByteBuffer buffer) throws IOException;
 
+    public  void writeAndFlush(byte[] bytes) throws IOException{
+        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
+        buffer.put(bytes);
+
+        writeAndFlush(buffer);
+    }
+
     /**
      * 通道是否开放中
      * */
