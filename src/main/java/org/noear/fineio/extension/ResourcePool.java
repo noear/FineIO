@@ -41,11 +41,16 @@ public class ResourcePool<R> {
         R r = threadLocal.get();
 
         if (r == null) {
-            if (queue.isEmpty() && null != (r = factory.run())) {
-                queue.offer(r);
+            if (queue.isEmpty() == false) {
+                r = open(queue.take());
             }
 
-            r = open(queue.take());
+            if(r == null){
+                if(null != (r = factory.create())) {
+                    queue.offer(r);
+                }
+            }
+
             threadLocal.set(r);
         }
 
@@ -59,8 +64,11 @@ public class ResourcePool<R> {
         R r = threadLocal.get();
 
         if (r != null) {
-            queue.offer(close(r));
             threadLocal.remove();
+
+            if(null != (r = close(r))) {
+                queue.offer(r);
+            }
         }
     }
 }

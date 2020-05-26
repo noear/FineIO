@@ -41,6 +41,9 @@ public abstract class NetClientConnector<T> {
      */
     public abstract void send(T message) throws IOException;
 
+
+    public abstract boolean isOpen();
+
     /**
      * 关闭
      */

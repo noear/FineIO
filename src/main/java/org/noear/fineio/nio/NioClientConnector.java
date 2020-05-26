@@ -1,12 +1,8 @@
 package org.noear.fineio.nio;
 
-import org.noear.fineio.NetClient;
 import org.noear.fineio.NetClientConnector;
-import org.noear.fineio.Protocol;
-import org.noear.fineio.SessionProcessor;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
@@ -135,5 +131,10 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
         while (buffer.hasRemaining()) {
             channel.write(buffer);
         }
+    }
+
+    @Override
+    public boolean isOpen() {
+        return channel.isOpen();
     }
 }

@@ -25,7 +25,7 @@ public class NetClient<T> {
 
         client.processor = processor;
         client.protocol = protocol;
-        client.pool = new ResourcePool(Runtime.getRuntime().availableProcessors(), ()->{
+        client.pool = new ResourcePool<NioClientConnector<T>>(Runtime.getRuntime().availableProcessors(), ()->{
             NioClientConnector<T> connector = new NioClientConnector<T>();
             connector.setProcessor(processor);
             connector.setProtocol(protocol);
@@ -39,7 +39,16 @@ public class NetClient<T> {
                 ex.printStackTrace();
                 return null;
             }
-        });
+        }){
+            @Override
+            protected NioClientConnector<T> open(NioClientConnector<T> res) {
+                if(res.isOpen()){
+                    return res;
+                }else {
+                    return null;
+                }
+            }
+        };
 
         return client;
     }
