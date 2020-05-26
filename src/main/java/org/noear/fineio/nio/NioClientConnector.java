@@ -1,6 +1,9 @@
 package org.noear.fineio.nio;
 
 import org.noear.fineio.NetClient;
+import org.noear.fineio.NetClientConnector;
+import org.noear.fineio.Protocol;
+import org.noear.fineio.SessionProcessor;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,18 +15,18 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 
-public class NioClient<T> extends NetClient<T> {
+public class NioClientConnector<T> extends NetClientConnector<T> {
     private ByteBuffer buffer = ByteBuffer.allocate(1024);
     private Selector selector;
     private CompletableFuture<Integer> sendFuture;
     private SocketChannel channel;
 
-    public NioClient(){
+
+    public NioClientConnector(){
         sendFuture = new CompletableFuture<>();
     }
 
-    @Override
-    public void connection(InetSocketAddress address) throws IOException {
+    public void connection() throws IOException {
         selector = Selector.open();
 
         channel = SocketChannel.open();
@@ -36,7 +39,7 @@ public class NioClient<T> extends NetClient<T> {
             channel.register(selector, SelectionKey.OP_CONNECT);
         }
 
-        startDo();
+        new Thread(this::startDo).start();
     }
 
 
@@ -116,23 +119,21 @@ public class NioClient<T> extends NetClient<T> {
     }
 
     @Override
-    public void send(T message) throws IOException{
+    public void send(T message) throws IOException {
         ByteBuffer buffer = protocol.encode(message);
 
-        if(sendFuture != null) {
+        if (sendFuture != null) {
             try {
                 sendFuture.get();
                 sendFuture = null;
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
 
         }
 
-        synchronized (channel) {
-            while(buffer.hasRemaining()) {
-                channel.write(buffer);
-            }
+        while (buffer.hasRemaining()) {
+            channel.write(buffer);
         }
     }
 }
