@@ -9,7 +9,6 @@ import java.util.List;
 
 public class ClientTest {
     public static void main(String[] args) {
-
         NetClient<String> client = FineIO.client(new StringProtocol(), new StringClientProcessor())
                                          .bind("localhost", 8080);
 
@@ -25,7 +24,5 @@ public class ClientTest {
                 ex.printStackTrace();
             }
         });
-
-
     }
 }
