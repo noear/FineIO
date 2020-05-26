@@ -13,23 +13,17 @@ public class NetClient<T> {
 
     private ResourcePool<NioClientConnector<T>> pool;
 
-    private SessionProcessor<T> processor;
-    private Protocol<T> protocol;
-    private InetSocketAddress address;
-
     /**
      * Nio net server
      */
     public static <T> NetClient<T> nio(Protocol<T> protocol, SessionProcessor<T> processor, String hostname, int port) {
         NetClient<T> client = new NetClient<>();
 
-        client.processor = processor;
-        client.protocol = protocol;
         client.pool = new ResourcePool<NioClientConnector<T>>(Runtime.getRuntime().availableProcessors(), ()->{
             NioClientConnector<T> connector = new NioClientConnector<T>();
             connector.setProcessor(processor);
             connector.setProtocol(protocol);
-            connector.setAddress(hostname,port);
+            connector.setAddress(hostname, port);
 
             try {
                 connector.connection();
