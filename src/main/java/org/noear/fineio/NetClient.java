@@ -4,7 +4,6 @@ import org.noear.fineio.extension.ResourcePool;
 import org.noear.fineio.nio.NioClientConnector;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 
 /**
  * 网络客户端
