@@ -15,7 +15,7 @@ public abstract class NetClient<T> {
     /**
      * Nio net server
      */
-    public static <T> NetClient<T> nio(Protocol<T> protocol, MessageProcessor<T> processor) {
+    public static <T> NetClient<T> nio(Protocol<T> protocol, SessionProcessor<T> processor) {
         NetClient<T> client = new NioClient<T>();
         client.protocol = protocol;
         client.processor = processor;
@@ -26,7 +26,7 @@ public abstract class NetClient<T> {
     /**
      * 消息处理器
      */
-    protected MessageProcessor<T> processor;
+    protected SessionProcessor<T> processor;
     protected Protocol<T> protocol;
 
     /**

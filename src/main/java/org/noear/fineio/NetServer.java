@@ -12,7 +12,7 @@ public abstract class NetServer<T> {
     /**
      * Nio net server
      * */
-    public static <T> NetServer<T> nio(Protocol<T> protocol, MessageProcessor<T> processor) {
+    public static <T> NetServer<T> nio(Protocol<T> protocol, SessionProcessor<T> processor) {
         NetServer<T> server = new NioServer<T>();
         server.protocol = protocol;
         server.processor = processor;
@@ -23,7 +23,7 @@ public abstract class NetServer<T> {
     /**
      * 消息处理器
      * */
-    protected MessageProcessor<T> processor;
+    protected SessionProcessor<T> processor;
     protected Protocol<T> protocol;
 
 

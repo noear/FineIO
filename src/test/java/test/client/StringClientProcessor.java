@@ -1,9 +1,9 @@
 package test.client;
 
-import org.noear.fineio.MessageProcessor;
+import org.noear.fineio.SessionProcessor;
 import org.noear.fineio.NetSession;
 
-public class StringClientProcessor implements MessageProcessor<String> {
+public class StringClientProcessor implements SessionProcessor<String> {
     int count = 0;
     int total = 1000 * 1000;
     long time_start = 0;
