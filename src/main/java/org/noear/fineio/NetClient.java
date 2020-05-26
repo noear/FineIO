@@ -4,6 +4,7 @@ import org.noear.fineio.extension.ResourcePool;
 import org.noear.fineio.nio.NioClientConnector;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 
 /**
  * 网络客户端
@@ -12,17 +13,18 @@ public class NetClient<T> {
 
     private ResourcePool<NioClientConnector<T>> pool;
 
-    /**
-     * Nio net server
-     */
-    public static <T> NetClient<T> nio(Protocol<T> protocol, SessionProcessor<T> processor, String hostname, int port) {
-        NetClient<T> client = new NetClient<>();
+    private SessionProcessor<T> processor;
+    private Protocol<T> protocol;
+    private InetSocketAddress address;
 
-        client.pool = new ResourcePool<NioClientConnector<T>>(Runtime.getRuntime().availableProcessors(), ()->{
+    public NetClient<T> bind(InetSocketAddress address) {
+        this.address = address;
+
+        this.pool = new ResourcePool<NioClientConnector<T>>(Runtime.getRuntime().availableProcessors(), ()->{
             NioClientConnector<T> connector = new NioClientConnector<T>();
             connector.setProcessor(processor);
             connector.setProtocol(protocol);
-            connector.setAddress(hostname, port);
+            connector.setAddress(address);
 
             try {
                 connector.connection();
@@ -42,6 +44,25 @@ public class NetClient<T> {
                 }
             }
         };
+
+        return this;
+    }
+
+    public NetClient<T> bind(String hostname, int port) {
+        if (hostname == null) {
+            return bind(new InetSocketAddress(port));
+        } else {
+            return bind(new InetSocketAddress(hostname, port));
+        }
+    }
+
+    /**
+     * Nio net server
+     */
+    public static <T> NetClient<T> nio(Protocol<T> protocol, SessionProcessor<T> processor) {
+        NetClient<T> client = new NetClient<>();
+        client.protocol = protocol;
+        client.processor = processor;
 
         return client;
     }

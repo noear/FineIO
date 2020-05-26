@@ -10,7 +10,8 @@ import java.util.List;
 public class ClientTest {
     public static void main(String[] args) {
 
-        NetClient<String> client = FineIO.client(new StringProtocol(), new StringClientProcessor(), "localhost", 8080);
+        NetClient<String> client = FineIO.client(new StringProtocol(), new StringClientProcessor())
+                                         .bind("localhost", 8080);
 
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < 1000 * 1000; i++) {
