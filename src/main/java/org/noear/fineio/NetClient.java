@@ -15,35 +15,34 @@ public class NetClient<T> {
 
     private SessionProcessor<T> processor;
     private Protocol<T> protocol;
-    private InetSocketAddress address;
 
     public NetClient<T> bind(InetSocketAddress address) {
-        this.address = address;
+        if(pool == null) {
 
-        this.pool = new ResourcePool<NioClientConnector<T>>(Runtime.getRuntime().availableProcessors(), ()->{
-            NioClientConnector<T> connector = new NioClientConnector<T>();
-            connector.setProcessor(processor);
-            connector.setProtocol(protocol);
-            connector.setAddress(address);
+            this.pool = new ResourcePool<NioClientConnector<T>>(Runtime.getRuntime().availableProcessors(), () -> {
+                NioClientConnector<T> connector = new NioClientConnector<T>();
+                connector.setProcessor(processor);
+                connector.setProtocol(protocol);
+                connector.setAddress(address);
 
-            try {
-                connector.connection();
-
-                return connector;
-            }catch (Exception ex){
-                ex.printStackTrace();
-                return null;
-            }
-        }){
-            @Override
-            protected NioClientConnector<T> open(NioClientConnector<T> res) {
-                if(res.isOpen()){
-                    return res;
-                }else {
+                try {
+                    connector.connection();
+                    return connector;
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                     return null;
                 }
-            }
-        };
+            }) {
+                @Override
+                protected NioClientConnector<T> open(NioClientConnector<T> res) {
+                    if (res.isOpen()) {
+                        return res;
+                    } else {
+                        return null;
+                    }
+                }
+            };
+        }
 
         return this;
     }
@@ -71,6 +70,10 @@ public class NetClient<T> {
      * 发送
      */
     public void send(T message) throws IOException{
+        if(pool == null){
+            return;
+        }
+
         NioClientConnector<T> c = pool.apply();
         c.send(message);
         pool.free();
