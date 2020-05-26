@@ -10,6 +10,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class NioClientConnector<T> extends NetClientConnector<T> {
     private ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -120,7 +121,9 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
 
         if (sendFuture != null) {
             try {
-                sendFuture.get();
+                //3秒，则算超时
+                //
+                sendFuture.get(3, TimeUnit.SECONDS);
                 sendFuture = null;
             } catch (Exception ex) {
                 ex.printStackTrace();
