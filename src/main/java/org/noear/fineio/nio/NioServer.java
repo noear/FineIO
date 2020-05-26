@@ -19,10 +19,10 @@ public class NioServer<T> extends NetServer<T> {
      * 开始
      * */
     @Override
-    public void start(int port) throws IOException {
+    public void start(InetSocketAddress address) throws IOException {
         ServerSocketChannel ssc =  ServerSocketChannel.open();
         ssc.configureBlocking(false);
-        ssc.socket().bind(new InetSocketAddress(port));
+        ssc.socket().bind(address);
 
         selector = Selector.open();
 

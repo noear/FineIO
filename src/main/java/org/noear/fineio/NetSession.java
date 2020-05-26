@@ -30,6 +30,7 @@ public abstract class NetSession<T> {
     public  void writeAndFlush(byte[] bytes) throws IOException{
         ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
         buffer.put(bytes);
+        buffer.flip();
 
         writeAndFlush(buffer);
     }

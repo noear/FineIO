@@ -18,15 +18,16 @@ public class NioClient<T> extends NetClient<T> {
     private CompletableFuture<Integer> sendFuture;
     private SocketChannel channel;
 
+    public NioClient(){
+        sendFuture = new CompletableFuture<>();
+    }
+
     @Override
     public void connection(InetSocketAddress address) throws IOException {
-        sendFuture = new CompletableFuture<>();
+        selector = Selector.open();
 
         channel = SocketChannel.open();
         channel.configureBlocking(false);
-
-        selector = Selector.open();
-        channel.register(selector, SelectionKey.OP_ACCEPT);
 
         if(channel.connect(address)){
             channel.register(selector, SelectionKey.OP_READ);
@@ -40,8 +41,6 @@ public class NioClient<T> extends NetClient<T> {
 
 
     private void startDo(){
-
-
         while (!colsed){
             try{
                 selector.select();
@@ -117,12 +116,21 @@ public class NioClient<T> extends NetClient<T> {
     }
 
     @Override
-    public void send(ByteBuffer buffer) throws Exception {
+    public void send(ByteBuffer buffer) throws IOException{
         if(sendFuture != null) {
-            sendFuture.get();
-            sendFuture = null;
+            try {
+                sendFuture.get();
+                sendFuture = null;
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
         }
 
-        channel.write(buffer);
+        synchronized (channel) {
+            while(buffer.hasRemaining()) {
+                channel.write(buffer);
+            }
+        }
     }
 }
