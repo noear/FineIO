@@ -116,7 +116,9 @@ public class NioClient<T> extends NetClient<T> {
     }
 
     @Override
-    public void send(ByteBuffer buffer) throws IOException{
+    public void send(T message) throws IOException{
+        ByteBuffer buffer = protocol.encode(message);
+
         if(sendFuture != null) {
             try {
                 sendFuture.get();

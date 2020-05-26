@@ -9,19 +9,16 @@ import java.util.List;
 public class ClientTest {
     public static void main(String[] args) {
 
-
-
-
         List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100000; i++) {
             list.add(i);
         }
 
-        list.parallelStream().forEach(i -> {
+        list.stream().forEach(i -> {
             try {
                 NetClient.nio(new StringProtocol(), new StringClientProcessor())
                         .connectionOnThread("localhost", 8080)
-                        .send(("测试" + i).getBytes());
+                        .sendAndColse("测试" + i);
             }catch (Exception ex){
                 ex.printStackTrace();
             }

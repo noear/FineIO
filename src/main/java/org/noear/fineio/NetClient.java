@@ -4,12 +4,14 @@ import org.noear.fineio.nio.NioClient;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 网络客户端
  * */
 public abstract class NetClient<T> {
+    static ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     /**
      * Nio net server
      */
@@ -47,13 +49,13 @@ public abstract class NetClient<T> {
      * 连接（在一个新的线程）
      */
     public NetClient<T> connectionOnThread(String hostname, int port) {
-        new Thread(() -> {
+        pool.execute(()->{
             try {
                 connection(hostname, port);
             } catch (Throwable ex) {
                 throw new RuntimeException(ex);
             }
-        }).start();
+        });
 
         return this;
     }
@@ -61,16 +63,13 @@ public abstract class NetClient<T> {
     /**
      * 发送
      */
-    public abstract void send(ByteBuffer buffer) throws IOException;
-
+    public abstract void send(T message) throws IOException;
     /**
-     * 发送
+     * 发送并关闭
      */
-    public void send(byte[] bytes)  throws IOException{
-        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
-        buffer.put(bytes);
-        buffer.flip();
-        send(buffer);
+    public  void sendAndColse(T message) throws IOException{
+        send(message);
+        colse();
     }
 
     /**

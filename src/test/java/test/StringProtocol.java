@@ -12,4 +12,15 @@ public class StringProtocol implements Protocol<String> {
 
         return new String(bytes);
     }
+
+    @Override
+    public ByteBuffer encode(String meaage) {
+        byte[] bytes = meaage.getBytes();
+        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
+
+        buffer.put(bytes);
+        buffer.flip();
+
+        return buffer;
+    }
 }
