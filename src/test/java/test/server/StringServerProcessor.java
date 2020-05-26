@@ -10,7 +10,7 @@ public class StringServerProcessor implements MessageProcessor<String> {
 
         try {
             System.out.println("收到：" + message);
-            session.writeAndFlush("滚".getBytes());
+            session.write("滚".getBytes());
         }catch (Exception ex){
             ex.printStackTrace();
         }

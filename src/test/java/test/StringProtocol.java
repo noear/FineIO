@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 
 public class StringProtocol implements Protocol<String> {
     @Override
-    public String decode(ByteBuffer buffer) {
+    public String request(ByteBuffer buffer) {
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
 

@@ -23,7 +23,7 @@ public class NioSession<T> extends NetSession<T> {
      * 写缓存
      * */
     @Override
-    public void writeAndFlush(ByteBuffer buffer) throws IOException{
+    public void write(ByteBuffer buffer) throws IOException{
          _channel.write(buffer);
     }
 

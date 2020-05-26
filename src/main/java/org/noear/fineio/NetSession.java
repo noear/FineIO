@@ -25,14 +25,14 @@ public abstract class NetSession<T> {
     /**
      * 写入
      * */
-    public abstract void writeAndFlush(ByteBuffer buffer) throws IOException;
+    public abstract void write(ByteBuffer buffer) throws IOException;
 
-    public  void writeAndFlush(byte[] bytes) throws IOException{
+    public  void write(byte[] bytes) throws IOException{
         ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
         buffer.put(bytes);
         buffer.flip();
 
-        writeAndFlush(buffer);
+        write(buffer);
     }
 
     /**

@@ -89,7 +89,7 @@ public class NioServer<T> extends NetServer<T> {
             if(size > 0) {
                 buffer.flip();
 
-                T message = protocol.decode(buffer);
+                T message = protocol.request(buffer);
 
                 if (message != null) {
                     //
