@@ -25,32 +25,25 @@ public abstract class NetServer<T> {
      * */
     protected SessionProcessor<T> processor;
     protected Protocol<T> protocol;
+    protected InetSocketAddress address;
 
+    public NetServer<T> bind(InetSocketAddress address) {
+        this.address = address;
+        return this;
+    }
 
-    /**
-     * 启动
-     * */
-    public abstract void start(InetSocketAddress address) throws IOException;
-    public void start(String hostname, int port) throws IOException {
+    public NetServer<T> bind(String hostname, int port) {
         if (hostname == null) {
-            start(new InetSocketAddress(port));
+            return bind(new InetSocketAddress(port));
         } else {
-            start(new InetSocketAddress(hostname, port));
+            return bind(new InetSocketAddress(hostname, port));
         }
     }
 
     /**
-     * 启动（在一个新的线程）
+     * 启动
      * */
-    public void startOnThread(String hostname, int port){
-        new Thread(() -> {
-            try {
-                start(hostname, port);
-            } catch (Throwable ex) {
-                throw new RuntimeException(ex);
-            }
-        }).start();
-    }
+    public abstract void start(boolean blocking);
 
     /**
      * 停止

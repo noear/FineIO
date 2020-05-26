@@ -19,7 +19,21 @@ public class NioServer<T> extends NetServer<T> {
      * 开始
      * */
     @Override
-    public void start(InetSocketAddress address) throws IOException {
+    public void start(boolean blocking) {
+        if(blocking){
+            try {
+                start0();
+            } catch (Throwable ex) {
+                throw new RuntimeException(ex);
+            }
+        }else{
+            new Thread(() -> {
+                start(true);
+            }).start();
+        }
+    }
+
+    private void start0() throws IOException {
         ServerSocketChannel ssc =  ServerSocketChannel.open();
         ssc.configureBlocking(false);
         ssc.socket().bind(address);
