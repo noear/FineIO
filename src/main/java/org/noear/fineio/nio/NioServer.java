@@ -1,7 +1,6 @@
 package org.noear.fineio.nio;
 
 import org.noear.fineio.NetServer;
-import sun.nio.ch.DirectBuffer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -110,10 +109,7 @@ public class NioServer<T> extends NetServer<T> {
     }
 
     private void bufferClear(){
-        if(buffer.isDirect()){
-            ((DirectBuffer)buffer).cleaner().clean();
-        }else{
-            buffer.clear();
-        }
+        buffer.position(0);
+        buffer.limit(buffer.capacity());
     }
 }
