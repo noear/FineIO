@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * 消息处理组
  * */
-public class MessageProcessorGroup<T> implements SessionProcessor<T> {
+public class SessionProcessorGroup<T> implements SessionProcessor<T> {
     private ArrayList<SessionProcessor<T>> group = new ArrayList<>();
 
     public void append(SessionProcessor<T> processor) {

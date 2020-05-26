@@ -6,11 +6,11 @@ import org.noear.fineio.NetSession;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MessageProcessorPool<T> implements SessionProcessor<T> {
+public class SessionProcessorPool<T> implements SessionProcessor<T> {
     private SessionProcessor<T> processor;
     private ExecutorService processorPool;
 
-    public MessageProcessorPool(SessionProcessor<T> processor){
+    public SessionProcessorPool(SessionProcessor<T> processor){
         this.processor = processor;
         this.processorPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
     }
