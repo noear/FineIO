@@ -1,6 +1,7 @@
 package org.noear.fineio.nio;
 
 import org.noear.fineio.NetServer;
+import sun.nio.ch.DirectBuffer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,7 +13,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 public class NioServer<T> extends NetServer<T> {
-    private ByteBuffer buffer = ByteBuffer.allocate(1024);
+    private ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
     private Selector selector;
 
     /**
@@ -83,7 +84,7 @@ public class NioServer<T> extends NetServer<T> {
         if (key.isReadable()) {
             SocketChannel channel = (SocketChannel) key.channel();
 
-            buffer.clear();
+            bufferClear();
             int size = channel.read(buffer);
 
             if(size > 0) {
@@ -105,6 +106,14 @@ public class NioServer<T> extends NetServer<T> {
                 key.cancel();
                 channel.close();
             }
+        }
+    }
+
+    private void bufferClear(){
+        if(buffer.isDirect()){
+            ((DirectBuffer)buffer).cleaner().clean();
+        }else{
+            buffer.clear();
         }
     }
 }
