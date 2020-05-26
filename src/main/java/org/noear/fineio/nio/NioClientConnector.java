@@ -43,7 +43,9 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
     private void startDo(){
         while (!colsed){
             try{
-                selector.select();
+                if(selector.select(1000) < 1){
+                    continue;
+                }
 
                 Iterator<SelectionKey> keyS = selector.selectedKeys().iterator();
                 while (keyS.hasNext()) {
@@ -131,9 +133,8 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
 
         }
 
-        while (buffer.hasRemaining()) {
-            channel.write(buffer);
-        }
+        channel.write(buffer);
+        //channel.shutdownOutput();
     }
 
     @Override

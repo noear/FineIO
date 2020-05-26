@@ -3,7 +3,6 @@ package org.noear.fineio.nio;
 import org.noear.fineio.NetServer;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -48,7 +47,10 @@ public class NioServer<T> extends NetServer<T> {
     private void startDo() {
         while (!stopped) {
             try {
-                selector.select();
+                if(selector.select(1000) <1){
+                    continue;
+                }
+
                 Iterator<SelectionKey> keyS = selector.selectedKeys().iterator();
 
                 while (keyS.hasNext()) {
