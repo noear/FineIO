@@ -8,11 +8,11 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class NioSession<T> extends NetSession<T> {
+public class NioTcpSession<T> extends NetSession<T> {
     private SocketChannel _channel;
     private Protocol<T> _protocol;
 
-    public NioSession(SocketChannel channel, Protocol<T> protocol){
+    public NioTcpSession(SocketChannel channel, Protocol<T> protocol){
         _channel = channel;
         _protocol = protocol;
     }

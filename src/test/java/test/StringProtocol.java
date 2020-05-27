@@ -9,7 +9,6 @@ public class StringProtocol implements Protocol<String> {
     public String decode(ByteBuffer buffer) {
         int size = buffer.getInt();
         if(size > 0) {
-
             byte[] bytes = new byte[size];
             buffer.get(bytes);
 

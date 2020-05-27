@@ -13,11 +13,11 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
-public class NioServer<T> extends NetServer<T> {
+public class NioTcpServer<T> extends NetServer<T> {
     private final ByteBuffer buffer;
     private Selector selector;
 
-    public NioServer(Protocol<T> protocol){
+    public NioTcpServer(Protocol<T> protocol){
         config.setProtocol(protocol);
         buffer = ByteBuffer.allocateDirect(config.getBufferSize());
     }
@@ -115,9 +115,8 @@ public class NioServer<T> extends NetServer<T> {
                 //如果有处理器?
                 //
                 bufferClear();
-                size = sc.read(buffer);
 
-                if (size > 0) {
+                while ((size = sc.read(buffer)) > 0) {
                     buffer.flip();
 
                     while (buffer.hasRemaining()) {
@@ -129,11 +128,11 @@ public class NioServer<T> extends NetServer<T> {
                             //
                             //如果message没有问题，则执行处理
                             //
-                            NetSession<T> session = new NioSession<>(sc, config.getProtocol());
+                            NetSession<T> session = new NioTcpSession<>(sc, config.getProtocol());
 
                             try {
                                 config.getProcessor().process(session, message);
-                            }catch (Throwable ex){
+                            } catch (Throwable ex) {
                                 ex.printStackTrace();
                             }
                         }

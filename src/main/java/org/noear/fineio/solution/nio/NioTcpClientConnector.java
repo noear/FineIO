@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-public class NioClientConnector<T> extends NetClientConnector<T> {
+public class NioTcpClientConnector<T> extends NetClientConnector<T> {
     private final ByteBuffer readBuffer;
     private CompletableFuture<Integer> connectionFuture;
 
@@ -22,7 +22,7 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
     private SocketChannel channel;
 
 
-    public NioClientConnector(NetConfig<T> config){
+    public NioTcpClientConnector(NetConfig<T> config){
         super(config);
         this.readBuffer = ByteBuffer.allocateDirect(config.getBufferSize());
         this.connectionFuture = new CompletableFuture<>();
@@ -127,7 +127,7 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
                             //
                             //如果message没有问题，则执行处理
                             //
-                            NetSession<T> session = new NioSession<>(sc, config.getProtocol());
+                            NetSession<T> session = new NioTcpSession<>(sc, config.getProtocol());
 
                             try {
                                 config.getProcessor().process(session, message);
