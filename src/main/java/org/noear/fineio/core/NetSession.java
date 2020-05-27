@@ -25,6 +25,7 @@ public class NetSession {
     public void write(byte[] bytes) throws IOException{
         ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
         buf.put(bytes);
+        buf.flip();
         write(buf);
     }
 
