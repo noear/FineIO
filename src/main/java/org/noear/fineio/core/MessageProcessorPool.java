@@ -13,9 +13,13 @@ public class MessageProcessorPool<T> implements MessageProcessor<T> {
     }
 
     @Override
-    public void process(NetSession<T> session, T message) {
+    public void process(NetSession<T> session, T message) throws Throwable{
         executors.execute(()->{
-            processor.process(session, message);
+            try {
+                processor.process(session, message);
+            }catch (Throwable ex){
+                ex.printStackTrace();
+            }
         });
     }
 }

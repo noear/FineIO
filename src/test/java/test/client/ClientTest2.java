@@ -15,9 +15,10 @@ public class ClientTest2 {
         //定义接收处理器
         //
         int taskTotal = 1000 * 100;
+        long time_start = System.currentTimeMillis();
 
         MessageProcessor<String> processor = (session, message) -> {
-            System.out.println(Thread.currentThread().getName() + "-客户端-收到：" + message);
+            System.out.println(Thread.currentThread().getName() + "-客户端-收到：" + message + " -- " +  (System.currentTimeMillis() - time_start));
         };
 
         //定义客户端
