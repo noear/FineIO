@@ -4,6 +4,7 @@ import org.noear.fineio.core.Config;
 import org.noear.fineio.core.NetSession;
 
 import java.io.IOException;
+import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.concurrent.ExecutorService;
@@ -49,7 +50,7 @@ public class NioTcpAcceptor<T> {
         SocketChannel sc = server.accept();
 
         if (sc != null) {
-            //sc.setOption(StandardSocketOptions.SO_KEEPALIVE, Boolean.TRUE);
+            sc.setOption(StandardSocketOptions.SO_KEEPALIVE, Boolean.TRUE);
             sc.configureBlocking(false);
             sc.register(selector, SelectionKey.OP_READ);
         }
