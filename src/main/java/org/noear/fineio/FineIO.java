@@ -1,8 +1,8 @@
 package org.noear.fineio;
 
 import org.noear.fineio.core.*;
-import org.noear.fineio.solution.nio.NioTcpClientConnector;
-import org.noear.fineio.solution.nio.NioTcpServer;
+import org.noear.fineio.tcp.NioTcpClientConnector;
+import org.noear.fineio.tcp.NioTcpServer;
 
 public final class FineIO {
     public static <T> NetClient<T> client(Protocol<T> protocol) {

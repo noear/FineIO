@@ -1,4 +1,4 @@
-package org.noear.fineio.solution.nio;
+package org.noear.fineio.tcp;
 
 import org.noear.fineio.core.NetClientConnector;
 import org.noear.fineio.core.Config;
