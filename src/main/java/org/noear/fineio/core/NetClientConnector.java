@@ -6,12 +6,12 @@ public abstract class NetClientConnector<T> {
     /**
      * 配置
      */
-    protected final IoConfig<T> config;
+    protected final Config<T> config;
 
     /**
      * 构建函数
      * */
-    public NetClientConnector(IoConfig<T> config){
+    public NetClientConnector(Config<T> config){
         this.config = config;
     }
 

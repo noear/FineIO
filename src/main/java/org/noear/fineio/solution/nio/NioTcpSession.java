@@ -1,7 +1,7 @@
 package org.noear.fineio.solution.nio;
 
 import org.noear.fineio.core.NetSession;
-import org.noear.fineio.core.IoProtocol;
+import org.noear.fineio.core.Protocol;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,9 +10,9 @@ import java.nio.channels.SocketChannel;
 
 public class NioTcpSession<T> extends NetSession<T> {
     private SocketChannel _channel;
-    private IoProtocol<T> _protocol;
+    private Protocol<T> _protocol;
 
-    public NioTcpSession(SocketChannel channel, IoProtocol<T> protocol){
+    public NioTcpSession(SocketChannel channel, Protocol<T> protocol){
         _channel = channel;
         _protocol = protocol;
     }

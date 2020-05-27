@@ -1,6 +1,6 @@
 package org.noear.fineio.solution.nio;
 
-import org.noear.fineio.core.IoConfig;
+import org.noear.fineio.core.Config;
 import org.noear.fineio.core.NetSession;
 
 import java.io.IOException;
@@ -14,10 +14,10 @@ public class NioTcpAcceptor<T> {
     //临时缓冲（用于转移半包内容）
     private final ByteBuffer readBufferTmp;
 
-    private final IoConfig<T> config;
+    private final Config<T> config;
 
 
-    public NioTcpAcceptor(IoConfig<T> config) {
+    public NioTcpAcceptor(Config<T> config) {
         this.config = config;
 
         readBuffer = ByteBuffer.allocateDirect(config.getBufferSize());

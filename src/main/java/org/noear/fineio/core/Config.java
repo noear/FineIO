@@ -2,7 +2,7 @@ package org.noear.fineio.core;
 
 import java.net.InetSocketAddress;
 
-public class IoConfig<T> {
+public class Config<T> {
     /**
      * 代理
      * */
@@ -10,7 +10,7 @@ public class IoConfig<T> {
     /**
      * 协议
      * */
-    private IoProtocol<T> protocol;
+    private Protocol<T> protocol;
     /**
      * 地址
      * */
@@ -31,7 +31,7 @@ public class IoConfig<T> {
     public MessageHandler<T> getHandler() {
         return handler;
     }
-    public IoProtocol<T> getProtocol() {
+    public Protocol<T> getProtocol() {
         return protocol;
     }
     public InetSocketAddress getAddress() {
@@ -48,7 +48,7 @@ public class IoConfig<T> {
     public void setHandler(MessageHandler<T> handler) {
         this.handler = handler;
     }
-    public void setProtocol(IoProtocol<T> protocol) {
+    public void setProtocol(Protocol<T> protocol) {
         this.protocol = protocol;
     }
     public void setAddress(InetSocketAddress address) {

@@ -1,10 +1,10 @@
 package test.stringTest;
 
-import org.noear.fineio.core.IoProtocol;
+import org.noear.fineio.core.Protocol;
 
 import java.nio.ByteBuffer;
 
-public class StringProtocol implements IoProtocol<String> {
+public class StringProtocol implements Protocol<String> {
     @Override
     public String decode(ByteBuffer buffer) {
         if (buffer.remaining() > 4) {

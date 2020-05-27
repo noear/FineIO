@@ -1,8 +1,8 @@
 package org.noear.fineio.solution.nio;
 
-import org.noear.fineio.core.IoConfig;
+import org.noear.fineio.core.Config;
 import org.noear.fineio.core.NetServer;
-import org.noear.fineio.core.IoProtocol;
+import org.noear.fineio.core.Protocol;
 
 import java.io.IOException;
 import java.net.StandardSocketOptions;
@@ -16,11 +16,11 @@ public class NioTcpServer<T> extends NetServer<T> {
     private Selector selector;
     private NioTcpAcceptor<T> acceptor;
 
-    public NioTcpServer(IoProtocol<T> protocol) {
-        this(protocol, new IoConfig<T>());
+    public NioTcpServer(Protocol<T> protocol) {
+        this(protocol, new Config<T>());
     }
 
-    public NioTcpServer(IoProtocol<T> protocol, IoConfig<T> cfg) {
+    public NioTcpServer(Protocol<T> protocol, Config<T> cfg) {
         super(cfg);
         config.setProtocol(protocol);
         acceptor = new NioTcpAcceptor<>(config);
