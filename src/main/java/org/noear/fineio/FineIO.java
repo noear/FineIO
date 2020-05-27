@@ -29,7 +29,7 @@ public final class FineIO {
     }
 
     public static <T> NetServer<T> server(Protocol<T> protocol) {
-        return server(protocol);
+        return server(protocol, new NetConfig<T>());
     }
 
     public static <T> NetServer<T> server(Protocol<T> protocol, NetConfig<T> cfg) {
