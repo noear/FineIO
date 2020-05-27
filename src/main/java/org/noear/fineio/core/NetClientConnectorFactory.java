@@ -10,4 +10,6 @@ public interface NetClientConnectorFactory<T>  {
     default NetClientConnector<T> close(NetClientConnector<T> r){
         return r;
     }
+
+    default void release(NetClientConnector<T> r){ r.colse(); }
 }

@@ -9,10 +9,8 @@ import java.net.InetSocketAddress;
 public class NetClient<T> {
     private ResourcePool<NetClientConnector<T>> pool;
     private final NetConfig<T> config;
-    private final NetClientConnectorFactory<T> connectorFactory;
 
     public NetClient(Protocol<T> protocol, NetClientConnectorFactory<T> connectorFactory) {
-        this.connectorFactory = connectorFactory;
         this.config = new NetConfig<>();
         this.config.setProtocol(protocol);
 
@@ -30,6 +28,11 @@ public class NetClient<T> {
             @Override
             public NetClientConnector<T> close(NetClientConnector<T> connector) {
                 return connectorFactory.close(connector);
+            }
+
+            @Override
+            public void release(NetClientConnector<T> connector) {
+                connectorFactory.release(connector);
             }
         });
     }
@@ -88,5 +91,12 @@ public class NetClient<T> {
 
     public NetClientConnector<T> getConnector(){
        return pool.apply();
+    }
+
+    /**
+     * 关闭客户端
+     * */
+    public void colse(){
+        pool.clear();
     }
 }

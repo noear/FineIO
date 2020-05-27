@@ -2,7 +2,6 @@ package test.server;
 
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageProcessor;
-import org.noear.fineio.core.MessageProcessorPool;
 import test.StringProtocol;
 
 public class ServerTest {

@@ -22,4 +22,6 @@ public interface ResourceFactory<R> {
     default R close(R r){
         return r;
     }
+
+    void release(R r);
 }

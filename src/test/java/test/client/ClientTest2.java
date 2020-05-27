@@ -3,7 +3,6 @@ package test.client;
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageProcessor;
 import org.noear.fineio.core.NetClient;
-import org.noear.fineio.core.NetClientConnector;
 import test.StringProtocol;
 import test._future.CallUtil;
 

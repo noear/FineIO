@@ -6,9 +6,12 @@ import java.util.concurrent.LinkedBlockingQueue;
  * 资源池
  * */
 public class ResourcePool<R> {
+    //队列
     private final LinkedBlockingQueue<R> queue;
+    //线程状态
     private final ThreadLocal<R> threadLocal = new ThreadLocal<>();
 
+    //资源工厂
     private ResourceFactory<R> factory;
 
     public ResourcePool(int coreSize, ResourceFactory<R> factory) {
@@ -16,6 +19,9 @@ public class ResourcePool<R> {
         this.queue = new LinkedBlockingQueue<>(coreSize);
     }
 
+    /**
+     * 申请资源
+     * */
     public R apply() {
         try {
             return apply0();
@@ -24,8 +30,23 @@ public class ResourcePool<R> {
         }
     }
 
+    /**
+     * 释放资源
+     * */
     public void free() {
         free0();
+    }
+
+    /**
+     * 清空
+     * */
+    public void clear(){
+        queue.forEach(r->{
+            factory.release(r);
+        });
+
+        queue.clear();
+        threadLocal.set(null);
     }
 
     private R check(R res) {
