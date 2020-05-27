@@ -105,9 +105,7 @@ public class NioTcpServer<T> extends NetServer<T> {
         }
 
         if (key.isReadable()) {
-            SocketChannel sc = (SocketChannel) key.channel();
-
-            acceptor.read(sc,key);
+            acceptor.read(key);
         }
     }
 }

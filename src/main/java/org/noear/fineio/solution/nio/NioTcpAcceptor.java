@@ -22,7 +22,9 @@ public class NioTcpAcceptor<T> {
         readBufferTmp = ByteBuffer.allocateDirect(config.getBufferSize());
     }
 
-    public void read(SocketChannel channel, SelectionKey key) throws IOException {
+    public void read(SelectionKey key) throws IOException {
+        SocketChannel sc = (SocketChannel) key.channel();
+
         int size = -1;
 
         if (config.getProcessor() != null) {
@@ -31,7 +33,7 @@ public class NioTcpAcceptor<T> {
             //
             bufferClear(readBuffer);
 
-            while ((size = channel.read(readBuffer)) > 0) {
+            while ((size = sc.read(readBuffer)) > 0) {
                 readBuffer.flip();
 
                 //清空临时缓冲；准备接收半包
@@ -54,7 +56,7 @@ public class NioTcpAcceptor<T> {
                         //
                         //如果message没有问题，则执行处理
                         //
-                        NetSession<T> session = new NioTcpSession<>(channel, config.getProtocol());
+                        NetSession<T> session = new NioTcpSession<>(sc, config.getProtocol());
 
                         try {
                             config.getProcessor().process(session, message);
@@ -76,7 +78,7 @@ public class NioTcpAcceptor<T> {
         if (size < 0) {
             System.out.println("-- colse");
             key.cancel();
-            channel.close();
+            sc.close();
         }
     }
 

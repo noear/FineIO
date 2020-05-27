@@ -88,9 +88,9 @@ public class NioTcpClientConnector<T> extends NetClientConnector<T> {
             return;
         }
 
-        SocketChannel sc = (SocketChannel) key.channel();
-
         if(key.isConnectable()){
+            SocketChannel sc = (SocketChannel) key.channel();
+
             if (sc.finishConnect()) {
                 sc.register(selector, SelectionKey.OP_READ);
                 connectionFuture.complete(null);
@@ -100,7 +100,7 @@ public class NioTcpClientConnector<T> extends NetClientConnector<T> {
         }
 
         if(key.isReadable()){
-            acceptor.read(sc,key);
+            acceptor.read(key);
         }
     }
 
