@@ -7,15 +7,9 @@ import test._future.CallUtil;
 import test.stringTest.StringProtocol;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ClientTest3 {
     public static void main(String[] args) {
-        //定义代理
-        //
-        int taskTotal = 1000 * 100;
         long time_start = System.currentTimeMillis();
 
         MessageHandler<String> handler = (session, message) -> {
