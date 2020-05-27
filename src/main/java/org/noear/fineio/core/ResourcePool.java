@@ -38,23 +38,27 @@ public class ResourcePool<R> {
     }
 
     /**
-     * 清空
+     * 清空资源
      * */
     public void clear(){
         queue.forEach(r->{
-            factory.release(r);
+            factory.close(r);
         });
 
         queue.clear();
         threadLocal.set(null);
     }
 
-    private R check(R res) {
-        return factory.check(res);
-    }
-
-    private R close(R res) {
-        return factory.close(res);
+    /**
+     * 创建资源
+     * */
+    private R create0() {
+        try {
+            return factory.create();
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -64,12 +68,12 @@ public class ResourcePool<R> {
         R r = threadLocal.get();
 
         if (r != null) {
-            r = check(r);
+            r = factory.check(r);
         }
 
         if (r == null) {
             if (queue.isEmpty() == false) {
-                r = check(queue.take());
+                r = factory.check(queue.take());
             }
 
             if (r == null) {
@@ -84,15 +88,6 @@ public class ResourcePool<R> {
         return r;
     }
 
-    private R create0() {
-        try {
-            return factory.create();
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
     /**
      * 释放资源
      */
@@ -102,7 +97,7 @@ public class ResourcePool<R> {
         if (r != null) {
             threadLocal.remove();
 
-            if (null != (r = close(r))) {
+            if (null != (r = factory.free(r))) {
                 queue.offer(r);
             }
         }

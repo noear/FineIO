@@ -26,13 +26,13 @@ public class NetClient<T> {
             }
 
             @Override
-            public NetClientConnector<T> close(NetClientConnector<T> connector) {
-                return connectorFactory.close(connector);
+            public NetClientConnector<T> free(NetClientConnector<T> connector) {
+                return connectorFactory.free(connector);
             }
 
             @Override
-            public void release(NetClientConnector<T> connector) {
-                connectorFactory.release(connector);
+            public void close(NetClientConnector<T> connector) {
+                connectorFactory.close(connector);
             }
         });
     }

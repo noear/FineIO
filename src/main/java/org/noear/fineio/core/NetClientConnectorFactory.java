@@ -7,9 +7,9 @@ public interface NetClientConnectorFactory<T>  {
         return r;
     }
 
-    default NetClientConnector<T> close(NetClientConnector<T> r){
+    default NetClientConnector<T> free(NetClientConnector<T> r){
         return r;
     }
 
-    default void release(NetClientConnector<T> r){ r.colse(); }
+    default void close(NetClientConnector<T> r){ r.colse(); }
 }

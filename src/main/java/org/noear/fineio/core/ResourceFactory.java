@@ -10,18 +10,21 @@ public interface ResourceFactory<R> {
     R create() throws Throwable;
 
     /**
-     * 打开资源（可以打开时，进行检测）
+     * 检查资源
      * */
     default R check(R r){
         return r;
     }
 
     /**
-     * 关闭资料
+     * 释放自由
      * */
-    default R close(R r){
+    default R free(R r){
         return r;
     }
 
-    void release(R r);
+    /**
+     * 关闭
+     * */
+    void close(R r);
 }
