@@ -71,9 +71,12 @@ public class NetClient<T> {
 
         NetClientConnector<T> c = pool.apply();
 
-        if(c != null && c.isValid()) {
-            c.send(message);
-            pool.free();
+        if(c != null) {
+            try {
+                c.send(message);
+            }finally {
+                pool.free();
+            }
         }else{
             throw new IOException("Failed to get connection!");
         }

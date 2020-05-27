@@ -42,7 +42,7 @@ public class ResourcePool<R> {
     private R apply0() throws InterruptedException {
         R r = threadLocal.get();
 
-        if(r!=null) {
+        if (r != null) {
             r = check(r);
         }
 
@@ -51,8 +51,8 @@ public class ResourcePool<R> {
                 r = check(queue.take());
             }
 
-            if(r == null){
-                if(null != (r = create0())) {
+            if (r == null) {
+                if (null != (r = create0())) {
                     queue.offer(r);
                 }
             }
@@ -63,10 +63,10 @@ public class ResourcePool<R> {
         return r;
     }
 
-    private R create0(){
-        try{
+    private R create0() {
+        try {
             return factory.create();
-        }catch (Throwable ex){
+        } catch (Throwable ex) {
             ex.printStackTrace();
             return null;
         }
@@ -74,14 +74,14 @@ public class ResourcePool<R> {
 
     /**
      * 释放资源
-     * */
+     */
     private void free0() {
         R r = threadLocal.get();
 
         if (r != null) {
             threadLocal.remove();
 
-            if(null != (r = close(r))) {
+            if (null != (r = close(r))) {
                 queue.offer(r);
             }
         }
