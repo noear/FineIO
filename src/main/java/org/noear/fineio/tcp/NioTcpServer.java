@@ -6,10 +6,7 @@ import org.noear.fineio.core.Protocol;
 
 import java.io.IOException;
 import java.net.StandardSocketOptions;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Iterator;
 
 public class NioTcpServer<T> extends NetServer<T> {
@@ -23,7 +20,7 @@ public class NioTcpServer<T> extends NetServer<T> {
     public NioTcpServer(Protocol<T> protocol, Config<T> cfg) {
         super(cfg);
         config.setProtocol(protocol);
-        acceptor = new NioTcpAcceptor<>(config);
+        acceptor = new NioTcpAcceptor<>(config, true);
     }
 
     /**
@@ -71,7 +68,11 @@ public class NioTcpServer<T> extends NetServer<T> {
 
                     try {
                         selectDo(key);
-                    } catch (Throwable ex) {
+                    }
+                    catch (ClosedChannelException ex){
+                        key.cancel();
+                    }
+                    catch (Throwable ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -95,22 +96,11 @@ public class NioTcpServer<T> extends NetServer<T> {
         }
 
         if (key.isAcceptable()) {
-            ServerSocketChannel server = (ServerSocketChannel) key.channel();
-            SocketChannel channel = server.accept();
-            if (channel == null) {
-                return;
-            }
-
-
-
-            channel.setOption(StandardSocketOptions.SO_KEEPALIVE, Boolean.TRUE);
-            channel.configureBlocking(false);
-            channel.register(selector, SelectionKey.OP_READ);
-            return;
+            acceptor.accept(key,selector);
         }
 
         if (key.isReadable()) {
-            acceptor.receive(key);
+            acceptor.read(key);
         }
     }
 }

@@ -13,7 +13,7 @@ public class ClientTest2 {
     public static void main(String[] args) {
         //定义代理
         //
-        int taskTotal = 1000;
+        int taskTotal = 1000 * 100;
         long time_start = System.currentTimeMillis();
 
         MessageHandler<String> handler = (session, message) -> {

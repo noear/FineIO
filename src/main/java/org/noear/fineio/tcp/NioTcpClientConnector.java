@@ -24,7 +24,7 @@ public class NioTcpClientConnector<T> extends NetClientConnector<T> {
     public NioTcpClientConnector(Config<T> config){
         super(config);
         this.connectionFuture = new CompletableFuture<>();
-        this.acceptor = new NioTcpAcceptor<>(config);
+        this.acceptor = new NioTcpAcceptor<>(config, false);
     }
 
     public NetClientConnector<T> connection() throws IOException {
@@ -99,7 +99,7 @@ public class NioTcpClientConnector<T> extends NetClientConnector<T> {
         }
 
         if(key.isReadable()){
-            acceptor.receive(key);
+            acceptor.read(key);
         }
     }
 
