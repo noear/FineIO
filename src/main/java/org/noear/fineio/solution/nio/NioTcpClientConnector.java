@@ -1,7 +1,7 @@
 package org.noear.fineio.solution.nio;
 
 import org.noear.fineio.core.NetClientConnector;
-import org.noear.fineio.core.NetConfig;
+import org.noear.fineio.core.IoConfig;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -21,7 +21,7 @@ public class NioTcpClientConnector<T> extends NetClientConnector<T> {
     private final NioTcpAcceptor<T> acceptor;
 
 
-    public NioTcpClientConnector(NetConfig<T> config){
+    public NioTcpClientConnector(IoConfig<T> config){
         super(config);
         this.connectionFuture = new CompletableFuture<>();
         this.acceptor = new NioTcpAcceptor<>(config);

@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 /**
  * 编码协议
  * */
-public interface Protocol<T> {
+public interface IoProtocol<T> {
     T decode(final ByteBuffer buffer);
     ByteBuffer encode(T meaage);
 }
