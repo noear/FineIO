@@ -15,17 +15,10 @@ public class ClientTest2 {
     public static void main(String[] args) {
         //定义接收处理器
         //
-        int taskTotal = 1000;
-        AtomicInteger atomicCount = new AtomicInteger();
-        long time_start = System.currentTimeMillis();
+        int taskTotal = 1000 * 1000;
 
         MessageProcessor<String> processor = (session, message) -> {
-            //int idx = atomicCount.incrementAndGet();
-            //long times = (System.currentTimeMillis() - time_start);
-
             System.out.println(Thread.currentThread().getName() + "-客户端-收到：" + message);
-
-            //System.out.println(Thread.currentThread().getName() + "-客户端-" + idx + "-收到：" + message + " -用时：" + times);
         };
 
         //定义客户端

@@ -138,6 +138,7 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
 
     @Override
     public void send(T message) throws IOException {
+
         if (connectionFuture != null) {
             try {
                 connectionFuture.get(config.getConnectionTimeout(), TimeUnit.SECONDS);
@@ -156,19 +157,17 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
 
     @Override
     public boolean isValid() {
-        return channel.isConnected();
+        return channel.isOpen();
     }
 
     @Override
     public void colse() {
-        System.out.println("------ colse");
         try {
             colsed = true;
             channel.close();
         }catch (IOException ex){
             ex.printStackTrace();
         }
-        System.exit(0);
     }
     private boolean colsed;
 

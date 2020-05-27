@@ -40,7 +40,7 @@ public class NioSession<T> extends NetSession<T> {
 
     @Override
     public boolean isValid() {
-        return _channel.isConnected();
+        return _channel.isOpen();
     }
 
     @Override
