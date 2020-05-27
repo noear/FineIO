@@ -5,16 +5,16 @@ import java.util.concurrent.Executors;
 
 public class MessageProcessorPool<T> implements MessageProcessor<T> {
     private MessageProcessor<T> processor;
-    private ExecutorService pool;
+    private ExecutorService executors;
 
     public MessageProcessorPool(MessageProcessor<T> processor){
         this.processor = processor;
-        this.pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+        this.executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
     }
 
     @Override
     public void process(NetSession<T> session, T message) {
-        pool.execute(()->{
+        executors.execute(()->{
             processor.process(session, message);
         });
     }
