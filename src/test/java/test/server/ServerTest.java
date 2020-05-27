@@ -14,7 +14,7 @@ public class ServerTest {
         //
         MessageProcessor<String> processor = (session,message)->{
             try {
-                System.out.println("收到：" + message +" -- " + (System.currentTimeMillis() - time_start));
+                System.out.println("收到：" + message);
                 //Thread.sleep(10);
                 session.write("别来防我");
             }catch (Throwable ex){
@@ -25,7 +25,7 @@ public class ServerTest {
         //启动服务
         //
         FineIO.server(new StringProtocol())
-                .process(processor)
+                .process(new MessageProcessorPool<>(processor))
                 .bind("localhost", 8080)
                 .start(false);
     }
