@@ -4,7 +4,7 @@ import java.net.InetSocketAddress;
 
 public class NetConfig<T> {
     /**
-     * 处理器
+     * 代理
      * */
     private MessageHandler<T> handler;
     /**

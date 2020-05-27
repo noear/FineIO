@@ -32,7 +32,7 @@ public class NioTcpAcceptor<T> {
 
         if (config.getHandler() != null) {
             //
-            //如果有处理器?
+            //如果有代理?
             //
             bufferClear(readBuffer);
 

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public abstract class NetClientConnector<T> {
     /**
-     * 消息处理器
+     * 配置
      */
     protected final NetConfig<T> config;
 
