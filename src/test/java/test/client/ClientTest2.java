@@ -26,7 +26,7 @@ public class ClientTest2 {
         //测试（请选启动服务端）
         //
         List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < 1000 * 1000; i++) {
+        for (int i = 0; i < 1000 * 100; i++) {
             list.add(i);
         }
 

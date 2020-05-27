@@ -48,6 +48,11 @@ public class NetClient<T> {
         }
     }
 
+    public NetClient<T> connectionTimeout(int seconds){
+        config.setConnectionTimeout(seconds);
+        return this;
+    }
+
     /**
      * 接收
      * */
@@ -65,7 +70,12 @@ public class NetClient<T> {
         }
 
         NetClientConnector<T> c = pool.apply();
-        c.send(message);
-        pool.free();
+
+        if(c != null) {
+            c.send(message);
+            pool.free();
+        }else{
+            throw new IOException("Failed to get connection!");
+        }
     }
 }

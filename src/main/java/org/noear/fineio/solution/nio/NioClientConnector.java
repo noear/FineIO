@@ -15,15 +15,17 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class NioClientConnector<T> extends NetClientConnector<T> {
-    private ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+    private final ByteBuffer readBuffer;
+    private final CompletableFuture<Integer> connectionFuture;
+
     private Selector selector;
-    private CompletableFuture<Integer> sendFuture;
     private SocketChannel channel;
 
 
     public NioClientConnector(NetConfig<T> config){
         super(config);
-        this.sendFuture = new CompletableFuture<>();
+        this.readBuffer = ByteBuffer.allocateDirect(config.getBufferSize());
+        this.connectionFuture = new CompletableFuture<>();
     }
 
     public NetClientConnector<T> connection() throws IOException {
@@ -35,7 +37,7 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
         //尝试连接
         if(channel.connect(config.getAddress())){
             channel.register(selector, SelectionKey.OP_READ);
-            sendFuture.complete(null);
+            connectionFuture.complete(null);
         }else {
             channel.register(selector, SelectionKey.OP_CONNECT);
         }
@@ -91,7 +93,7 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
         if(key.isConnectable()){
             if (sc.finishConnect()) {
                 sc.register(selector, SelectionKey.OP_READ);
-                sendFuture.complete(null);
+                connectionFuture.complete(null);
             }else{
                 this.colse();
             }
@@ -105,15 +107,15 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
                 //如果有处理器?
                 //
                 bufferClear();
-                size = sc.read(buffer);
+                size = sc.read(readBuffer);
 
                 if (size > 0) {
-                    buffer.flip();
+                    readBuffer.flip();
 
-                    while (buffer.hasRemaining()) {
+                    while (readBuffer.hasRemaining()) {
                         //尝试多次解码
                         //
-                        T message = config.getProtocol().decode(buffer);
+                        T message = config.getProtocol().decode(readBuffer);
 
                         if (message != null) {
                             //
@@ -136,21 +138,19 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
 
     @Override
     public void send(T message) throws IOException {
-        ByteBuffer buffer = config.getProtocol().encode(message);
-
-        if (sendFuture != null) {
+        if (connectionFuture != null) {
             try {
                 //3秒，则算超时
                 //
-                sendFuture.get(3, TimeUnit.SECONDS);
-                sendFuture = null;
+                connectionFuture.get(config.getConnectionTimeout(), TimeUnit.SECONDS);
             } catch (Exception ex) {
-                ex.printStackTrace();
+              throw new IOException("Connection timeout");
             }
 
         }
 
-        channel.write(buffer);
+        ByteBuffer buf = config.getProtocol().encode(message);
+        channel.write(buf);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
     }
 
     private void bufferClear(){
-        buffer.position(0);
-        buffer.limit(buffer.capacity());
+        readBuffer.position(0);
+        readBuffer.limit(readBuffer.capacity());
     }
 }

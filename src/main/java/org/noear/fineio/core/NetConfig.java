@@ -16,16 +16,33 @@ public class NetConfig<T> {
      * */
     private InetSocketAddress address;
 
+    /**
+     * 连接超时（单位：秒；默认1分钟）
+     * */
+    private int connectionTimeout = 60;
+
+    /**
+     * 缓存大小（默认1024）
+     * */
+    private int bufferSize = 1024;
+
+
+
     public MessageProcessor<T> getProcessor() {
         return processor;
     }
-
     public Protocol<T> getProtocol() {
         return protocol;
     }
-
     public InetSocketAddress getAddress() {
         return address;
+    }
+    public int getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public int getBufferSize() {
+        return bufferSize;
     }
 
     public void setProcessor(MessageProcessor<T> processor) {
@@ -43,5 +60,13 @@ public class NetConfig<T> {
         } else {
             setAddress(new InetSocketAddress(hostname, port));
         }
+    }
+
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public void setBufferSize(int bufferSize) {
+        this.bufferSize = bufferSize;
     }
 }

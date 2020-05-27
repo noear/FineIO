@@ -13,11 +13,12 @@ import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
 public class NioServer<T> extends NetServer<T> {
-    private ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
+    private final ByteBuffer buffer;
     private Selector selector;
 
     public NioServer(Protocol<T> protocol){
         config.setProtocol(protocol);
+        buffer = ByteBuffer.allocateDirect(config.getBufferSize());
     }
 
     /**

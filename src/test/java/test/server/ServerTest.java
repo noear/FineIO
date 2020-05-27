@@ -22,7 +22,7 @@ public class ServerTest {
         //启动服务
         //
         FineIO.server(new StringProtocol())
-                .process(new MessageProcessorPool<>(processor))
+                .process(processor)
                 .bind("localhost", 8080)
                 .start(false);
     }
