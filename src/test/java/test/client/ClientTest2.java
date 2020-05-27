@@ -36,10 +36,10 @@ public class ClientTest2 {
             list.add(i);
         }
 
-        CallUtil.call(() -> connector.send("测试"));
+        CallUtil.call(() -> client.send("测试"));
 
         list.parallelStream().forEach(i -> {
-            CallUtil.call(() -> connector.send("测试" + i));
+            CallUtil.call(() -> client.send("测试" + i));
         });
     }
 }

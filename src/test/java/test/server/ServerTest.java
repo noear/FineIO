@@ -2,7 +2,6 @@ package test.server;
 
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageProcessor;
-import org.noear.fineio.core.MessageProcessorPool;
 import test.StringProtocol;
 
 public class ServerTest {
@@ -13,6 +12,7 @@ public class ServerTest {
         MessageProcessor<String> processor = (session,message)->{
             try {
                 System.out.println("收到：" + message);
+                //Thread.sleep(10);
                 session.write("别来防我");
             }catch (Throwable ex){
                 ex.printStackTrace();

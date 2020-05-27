@@ -115,7 +115,13 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
                     while (readBuffer.hasRemaining()) {
                         //尝试多次解码
                         //
-                        T message = config.getProtocol().decode(readBuffer);
+                        T message = null;
+
+                        try {
+                            message = config.getProtocol().decode(readBuffer);
+                        }catch (Exception ex){
+                            ex.printStackTrace();
+                        }
 
                         if (message != null) {
                             //
@@ -123,7 +129,11 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
                             //
                             NetSession<T> session = new NioSession<>(sc, config.getProtocol());
 
-                            config.getProcessor().process(session, message);
+                            try {
+                                config.getProcessor().process(session, message);
+                            }catch (Exception ex){
+                                ex.printStackTrace();
+                            }
                         }
                     }
                 }

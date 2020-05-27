@@ -8,11 +8,15 @@ public class StringProtocol implements Protocol<String> {
     @Override
     public String decode(ByteBuffer buffer) {
         int size = buffer.getInt();
+        if(size > 0) {
 
-        byte[] bytes = new byte[size];
-        buffer.get(bytes);
+            byte[] bytes = new byte[size];
+            buffer.get(bytes);
 
-        return new String(bytes);
+            return new String(bytes);
+        }else{
+            return null;
+        }
     }
 
     @Override

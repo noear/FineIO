@@ -68,9 +68,10 @@ public class NioServer<T> extends NetServer<T> {
                     try {
                         selectDo(key);
                     }catch (Throwable ex) {
-                        if (key != null && key.channel() != null) {
-                            key.channel().close();
-                        }
+                        ex.printStackTrace();
+//                        if (key != null && key.channel() != null) {
+//                            key.channel().close();
+//                        }
                     }
                 }
             } catch (Throwable ex) {
@@ -130,13 +131,18 @@ public class NioServer<T> extends NetServer<T> {
                             //
                             NetSession<T> session = new NioSession<>(sc, config.getProtocol());
 
-                            config.getProcessor().process(session, message);
+                            try {
+                                config.getProcessor().process(session, message);
+                            }catch (Throwable ex){
+                                ex.printStackTrace();
+                            }
                         }
                     }
                 }
             }
 
             if (size < 0) {
+                System.out.println("-- colse");
                 key.cancel();
                 sc.close();
             }
