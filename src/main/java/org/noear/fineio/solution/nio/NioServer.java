@@ -122,7 +122,7 @@ public class NioServer<T> extends NetServer<T> {
                         //
                         //如果message没有问题，则执行处理
                         //
-                        NetSession session = new NetSession(channel);
+                        NetSession session = new NioSession(channel);
 
                         config.getProcessor().process(session, message);
                     }

@@ -116,7 +116,7 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
                         //
                         //如果message没有问题，则执行处理
                         //
-                        NetSession session = new NetSession(sc);
+                        NetSession session = new NioSession(sc);
 
                         config.getProcessor().process(session, message);
                     }

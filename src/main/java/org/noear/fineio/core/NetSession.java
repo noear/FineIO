@@ -3,46 +3,34 @@ package org.noear.fineio.core;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 
 /**
  * 网络会话
  * */
-public class NetSession {
-    private SocketChannel _channel;
-
-    public NetSession(SocketChannel channel){
-        _channel = channel;
-    }
+public abstract class NetSession {
 
     /**
      * 写缓存
      * */
-    public void write(ByteBuffer buf) throws IOException{
-        _channel.write(buf);
-    }
+    public abstract void write(ByteBuffer buf) throws IOException;
 
+    public abstract InetSocketAddress getLocalAddress() throws IOException;
+
+    public abstract InetSocketAddress getRemoteAddress() throws IOException;
+
+    public abstract boolean isOpen();
+
+    public abstract void close() throws IOException;
+
+
+    /**
+     * 写入
+     * */
     public void write(byte[] bytes) throws IOException{
         ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
         buf.put(bytes);
         buf.flip();
         write(buf);
-    }
-
-    public  InetSocketAddress getLocalAddress() throws IOException{
-        return (InetSocketAddress)_channel.getLocalAddress();
-    }
-
-    public  InetSocketAddress getRemoteAddress() throws IOException{
-        return (InetSocketAddress)_channel.getRemoteAddress();
-    }
-
-    public boolean isOpen() {
-        return _channel.isOpen();
-    }
-
-    public void close() throws IOException {
-        _channel.close();
     }
 
     private Object _attachment;
