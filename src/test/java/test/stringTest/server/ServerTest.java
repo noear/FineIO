@@ -18,14 +18,7 @@ public class ServerTest {
         //
         FineIO.server(new StringProtocol())
                 .bind("localhost", 8080)
-                .handle(handler.pools())
+                .handle(handler.pools()) //handler.pools() //线程池模式
                 .start(false);
-
-
-
-        /**
-         * 处理时间短的：handler
-         * 处理时间长的：10ms或以上，用 handler.pools() //线程池模式
-         * */
     }
 }
