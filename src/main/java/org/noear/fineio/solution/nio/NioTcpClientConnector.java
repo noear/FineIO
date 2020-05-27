@@ -99,7 +99,7 @@ public class NioTcpClientConnector<T> extends NetClientConnector<T> {
         }
 
         if(key.isReadable()){
-            acceptor.read(key);
+            acceptor.receive(key);
         }
     }
 

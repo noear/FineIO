@@ -24,15 +24,8 @@ public class NioTcpAcceptor<T> {
         readBufferTmp = ByteBuffer.allocateDirect(config.getBufferSize());
 
     }
-    public void read(SelectionKey key) {
-        try {
-            read0(key);
-        }catch (IOException ex){
-            ex.printStackTrace();
-        }
-    }
 
-    private void read0(SelectionKey key) throws IOException{
+    public void receive(SelectionKey key) throws IOException{
         SocketChannel sc = (SocketChannel) key.channel();
 
         int size = -1;
