@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class NioTcpAcceptor<T> {
     //缓冲
@@ -18,34 +16,23 @@ public class NioTcpAcceptor<T> {
 
     private final NetConfig<T> config;
 
-    //private ExecutorService executors;
 
-    public NioTcpAcceptor(NetConfig<T> config, boolean pools) {
+    public NioTcpAcceptor(NetConfig<T> config) {
         this.config = config;
 
         readBuffer = ByteBuffer.allocateDirect(config.getBufferSize());
         readBufferTmp = ByteBuffer.allocateDirect(config.getBufferSize());
 
-//        if(pools) {
-//            executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
-//        }
     }
-
-    public void read(SelectionKey key) throws IOException{
-        //if(executors == null) {
+    public void read(SelectionKey key) {
+        try {
             read0(key);
-//        }else{
-//            executors.execute(() -> {
-//                try {
-//                    read0(key);
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//            });
-//        }
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
     }
 
-    private void read0(SelectionKey key) throws IOException {
+    private void read0(SelectionKey key) throws IOException{
         SocketChannel sc = (SocketChannel) key.channel();
 
         int size = -1;

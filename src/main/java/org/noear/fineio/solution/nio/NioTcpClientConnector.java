@@ -24,7 +24,7 @@ public class NioTcpClientConnector<T> extends NetClientConnector<T> {
     public NioTcpClientConnector(NetConfig<T> config){
         super(config);
         this.connectionFuture = new CompletableFuture<>();
-        this.acceptor = new NioTcpAcceptor<>(config, false);
+        this.acceptor = new NioTcpAcceptor<>(config);
     }
 
     public NetClientConnector<T> connection() throws IOException {

@@ -14,7 +14,7 @@ public class ClientTest2 {
     public static void main(String[] args) {
         //定义接收处理器
         //
-        int taskTotal = 1000 * 1000;
+        int taskTotal = 1000 * 100;
 
         MessageProcessor<String> processor = (session, message) -> {
             System.out.println(Thread.currentThread().getName() + "-客户端-收到：" + message);

@@ -7,15 +7,18 @@ import java.nio.ByteBuffer;
 public class StringProtocol implements Protocol<String> {
     @Override
     public String decode(ByteBuffer buffer) {
-        int size = buffer.getInt();
-        if (size > 0 && size <= buffer.remaining()) {
-            byte[] bytes = new byte[size];
-            buffer.get(bytes);
+        if (buffer.remaining() > 4) {
+            int size = buffer.getInt();
 
-            return new String(bytes);
-        } else {
-            return null;
+            if (size > 0 && size <= buffer.remaining()) {
+                byte[] bytes = new byte[size];
+                buffer.get(bytes);
+
+                return new String(bytes);
+            }
         }
+
+        return null;
     }
 
     @Override

@@ -8,11 +8,13 @@ import test.StringProtocol;
 public class ServerTest {
     public static void main(String[] args) {
 
+        long time_start = System.currentTimeMillis();
+
         //定义处理器
         //
         MessageProcessor<String> processor = (session,message)->{
             try {
-                System.out.println("收到：" + message);
+                System.out.println("收到：" + message +" -- " + (System.currentTimeMillis() - time_start));
                 //Thread.sleep(10);
                 session.write("别来防我");
             }catch (Throwable ex){
@@ -23,7 +25,7 @@ public class ServerTest {
         //启动服务
         //
         FineIO.server(new StringProtocol())
-                .process(new MessageProcessorPool<>(processor))
+                .process(processor)
                 .bind("localhost", 8080)
                 .start(false);
     }
