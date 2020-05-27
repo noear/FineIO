@@ -17,7 +17,7 @@ public class NioTcpServer<T> extends NetServer<T> {
 
     public NioTcpServer(Protocol<T> protocol) {
         config.setProtocol(protocol);
-        acceptor = new NioTcpAcceptor<>(config);
+        acceptor = new NioTcpAcceptor<>(config, true);
     }
 
     /**

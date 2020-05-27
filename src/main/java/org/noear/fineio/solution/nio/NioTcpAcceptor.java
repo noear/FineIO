@@ -18,23 +18,31 @@ public class NioTcpAcceptor<T> {
 
     private final NetConfig<T> config;
 
-    private final ExecutorService executors;
+    private ExecutorService executors;
 
-    public NioTcpAcceptor(NetConfig<T> config) {
+    public NioTcpAcceptor(NetConfig<T> config, boolean pools) {
         this.config = config;
+
         readBuffer = ByteBuffer.allocateDirect(config.getBufferSize());
         readBufferTmp = ByteBuffer.allocateDirect(config.getBufferSize());
-        executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+
+        if(pools) {
+            executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+        }
     }
 
-    public void read(SelectionKey key) {
-        executors.execute(() -> {
-            try {
-                read0(key);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
+    public void read(SelectionKey key) throws IOException{
+        if(executors == null) {
+            read0(key);
+        }else{
+            executors.execute(() -> {
+                try {
+                    read0(key);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            });
+        }
     }
 
     private void read0(SelectionKey key) throws IOException {

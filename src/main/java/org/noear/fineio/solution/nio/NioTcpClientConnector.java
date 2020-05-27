@@ -5,7 +5,6 @@ import org.noear.fineio.core.NetConfig;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -25,7 +24,7 @@ public class NioTcpClientConnector<T> extends NetClientConnector<T> {
     public NioTcpClientConnector(NetConfig<T> config){
         super(config);
         this.connectionFuture = new CompletableFuture<>();
-        this.acceptor = new NioTcpAcceptor<>(config);
+        this.acceptor = new NioTcpAcceptor<>(config, false);
     }
 
     public NetClientConnector<T> connection() throws IOException {
