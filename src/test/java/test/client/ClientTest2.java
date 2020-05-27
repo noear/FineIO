@@ -9,7 +9,6 @@ import test._future.CallUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClientTest2 {
     public static void main(String[] args) {
@@ -35,8 +34,6 @@ public class ClientTest2 {
         for (int i = 0; i < taskTotal; i++) {
             list.add(i);
         }
-
-        CallUtil.call(() -> client.send("测试"));
 
         list.parallelStream().forEach(i -> {
             CallUtil.call(() -> client.send("测试" + i));
