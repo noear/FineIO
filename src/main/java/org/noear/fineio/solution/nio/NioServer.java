@@ -5,6 +5,7 @@ import org.noear.fineio.core.NetSession;
 import org.noear.fineio.core.Protocol;
 
 import java.io.IOException;
+import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -98,6 +99,7 @@ public class NioServer<T> extends NetServer<T> {
                 return;
             }
 
+            channel.setOption(StandardSocketOptions.SO_KEEPALIVE, Boolean.TRUE);
             channel.configureBlocking(false);
             channel.register(selector, SelectionKey.OP_READ);
             return;

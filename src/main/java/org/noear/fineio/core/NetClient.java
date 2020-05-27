@@ -34,6 +34,10 @@ public class NetClient<T> {
         });
     }
 
+    public NetConfig<T> config(){
+        return this.config;
+    }
+
     public NetClient<T> bind(InetSocketAddress address) {
         config.setAddress(address);
 
@@ -80,5 +84,9 @@ public class NetClient<T> {
         }else{
             throw new IOException("Failed to get connection!");
         }
+    }
+
+    public NetClientConnector<T> getConnector(){
+       return pool.apply();
     }
 }

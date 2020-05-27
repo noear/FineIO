@@ -140,8 +140,6 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
     public void send(T message) throws IOException {
         if (connectionFuture != null) {
             try {
-                //3秒，则算超时
-                //
                 connectionFuture.get(config.getConnectionTimeout(), TimeUnit.SECONDS);
                 connectionFuture = null;
             } catch (Exception ex) {
@@ -150,8 +148,10 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
 
         }
 
-        ByteBuffer buf = config.getProtocol().encode(message);
-        channel.write(buf);
+        synchronized (channel) {
+            ByteBuffer buf = config.getProtocol().encode(message);
+            channel.write(buf);
+        }
     }
 
     @Override
@@ -161,12 +161,14 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
 
     @Override
     public void colse() {
+        System.out.println("------ colse");
         try {
             colsed = true;
             channel.close();
         }catch (IOException ex){
             ex.printStackTrace();
         }
+        System.exit(0);
     }
     private boolean colsed;
 

@@ -3,6 +3,7 @@ package test.client;
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageProcessor;
 import org.noear.fineio.core.NetClient;
+import org.noear.fineio.core.NetClientConnector;
 import test.StringProtocol;
 import test._future.CallUtil;
 
@@ -20,9 +21,11 @@ public class ClientTest1 {
                 .receive(processor)
                 .bind("localhost", 8080);
 
+        NetClientConnector<String> connector = client.getConnector();
+
         //测试（请选启动服务端）
         //
-        CallUtil.call(()->client.send("测试1"));
-        CallUtil.call(()->client.send("测试2"));
+        CallUtil.call(()->connector.send("测试1"));
+        CallUtil.call(()->connector.send("测试2"));
     }
 }

@@ -3,6 +3,7 @@ package test.client;
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageProcessor;
 import org.noear.fineio.core.NetClient;
+import org.noear.fineio.core.NetClientConnector;
 import test.StringProtocol;
 import test._future.CallUtil;
 
@@ -14,7 +15,7 @@ public class ClientTest2 {
     public static void main(String[] args) {
         //定义接收处理器
         //
-        int taskTotal = 1000 * 10;
+        int taskTotal = 1000;
         AtomicInteger atomicCount = new AtomicInteger();
         long time_start = System.currentTimeMillis();
 
@@ -33,6 +34,8 @@ public class ClientTest2 {
                 .receive(processor)
                 .bind("localhost", 8080);
 
+        NetClientConnector<String> connector = client.getConnector();
+
         //测试（请选启动服务端）
         //
         List<Integer> list = new ArrayList<>();
@@ -40,8 +43,10 @@ public class ClientTest2 {
             list.add(i);
         }
 
+        CallUtil.call(() -> connector.send("测试"));
+
         list.parallelStream().forEach(i -> {
-            CallUtil.call(() -> client.send("测试" + i));
+            CallUtil.call(() -> connector.send("测试" + i));
         });
     }
 }
