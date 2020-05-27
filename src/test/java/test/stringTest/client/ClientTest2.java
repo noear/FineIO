@@ -22,7 +22,7 @@ public class ClientTest2 {
 
         //定义客户端
         //
-        var client = FineIO.client(new StringProtocol()).handle(handler).bind("localhost", 8080);
+        var client = FineIO.client(new StringProtocol()).handle(handler).bind("localhost", 8888);
 
         //测试（请选启动服务端）
         //

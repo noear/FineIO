@@ -17,7 +17,7 @@ public class ServerTest {
         //启动服务
         //
         FineIO.server(new StringProtocol())
-                .bind("localhost", 8080)
+                .bind("localhost", 8888)
                 .handle(handler.pools()) //handler.pools() //线程池模式
                 .start(false);
     }
