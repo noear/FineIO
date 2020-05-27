@@ -6,14 +6,14 @@ import org.noear.fineio.solution.nio.NioServer;
 
 public final class FineIO {
     public static <T> NetClient<T> client(Protocol<T> protocol) {
-        return new NetClient(protocol, new NetClientConnectorFactory() {
+        return new NetClient(protocol, new NetClientConnectorFactory<T>() {
             @Override
-            public NetClientConnector create(NetConfig cfg) throws Throwable {
+            public NetClientConnector<T> create(NetConfig cfg) throws Throwable {
                 return new NioClientConnector<T>(cfg).connection();
             }
 
             @Override
-            public NetClientConnector open(NetClientConnector r) {
+            public NetClientConnector<T> open(NetClientConnector<T> r) {
                 if (r.isOpen()) {
                     return r;
                 } else {
