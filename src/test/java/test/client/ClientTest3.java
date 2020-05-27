@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ClientTest2 {
+public class ClientTest3 {
     public static void main(String[] args) {
         //定义接收处理器
         //
