@@ -18,7 +18,7 @@ public class NioTcpAcceptor<T> {
 
     private final NetConfig<T> config;
 
-    private ExecutorService executors;
+    //private ExecutorService executors;
 
     public NioTcpAcceptor(NetConfig<T> config, boolean pools) {
         this.config = config;
@@ -26,23 +26,23 @@ public class NioTcpAcceptor<T> {
         readBuffer = ByteBuffer.allocateDirect(config.getBufferSize());
         readBufferTmp = ByteBuffer.allocateDirect(config.getBufferSize());
 
-        if(pools) {
-            executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
-        }
+//        if(pools) {
+//            executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+//        }
     }
 
     public void read(SelectionKey key) throws IOException{
-        if(executors == null) {
+        //if(executors == null) {
             read0(key);
-        }else{
-            executors.execute(() -> {
-                try {
-                    read0(key);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            });
-        }
+//        }else{
+//            executors.execute(() -> {
+//                try {
+//                    read0(key);
+//                } catch (IOException ex) {
+//                    ex.printStackTrace();
+//                }
+//            });
+//        }
     }
 
     private void read0(SelectionKey key) throws IOException {
@@ -107,5 +107,6 @@ public class NioTcpAcceptor<T> {
     private void bufferClear(ByteBuffer buf) {
         buf.position(0);
         buf.limit(buf.capacity());
+        buf.mark();
     }
 }

@@ -2,6 +2,7 @@ package test.server;
 
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageProcessor;
+import org.noear.fineio.core.MessageProcessorPool;
 import test.StringProtocol;
 
 public class ServerTest {
@@ -22,7 +23,7 @@ public class ServerTest {
         //启动服务
         //
         FineIO.server(new StringProtocol())
-                .process(processor)
+                .process(new MessageProcessorPool<>(processor))
                 .bind("localhost", 8080)
                 .start(false);
     }
