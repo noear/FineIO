@@ -1,8 +1,8 @@
-package test.server;
+package test.stringTest.server;
 
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageProcessor;
-import test.StringProtocol;
+import test.stringTest.StringProtocol;
 
 public class ServerTest {
     public static void main(String[] args) {

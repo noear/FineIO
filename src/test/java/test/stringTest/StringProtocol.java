@@ -1,4 +1,4 @@
-package test;
+package test.stringTest;
 
 import org.noear.fineio.core.Protocol;
 

@@ -1,10 +1,10 @@
-package test.client;
+package test.stringTest.client;
 
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageProcessor;
 import org.noear.fineio.core.NetClient;
 import org.noear.fineio.core.NetClientConnector;
-import test.StringProtocol;
+import test.stringTest.StringProtocol;
 import test._future.CallUtil;
 
 public class ClientTest1 {
