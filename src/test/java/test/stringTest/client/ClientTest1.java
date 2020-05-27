@@ -9,7 +9,7 @@ import test._future.CallUtil;
 
 public class ClientTest1 {
     public static void main(String[] args) {
-        //定义接收处理器
+        //定义代理
         //
         MessageHandler<String> handler = (session, message)->{
             System.out.println(Thread.currentThread().getName()+"-客户端：收到：" + message);

@@ -6,7 +6,7 @@ import test.stringTest.StringProtocol;
 
 public class ServerTest {
     public static void main(String[] args) {
-        //定义处理器
+        //定义代理
         //
         MessageHandler<String> handler = (session, message)->{
                 System.out.println("我收到：" + message);

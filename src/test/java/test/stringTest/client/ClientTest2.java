@@ -6,14 +6,12 @@ import org.noear.fineio.core.NetClient;
 import test.stringTest.StringProtocol;
 import test._future.CallUtil;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ClientTest2 {
     public static void main(String[] args) {
-        //定义接收处理器
+        //定义代理
         //
         int taskTotal = 1000;
         long time_start = System.currentTimeMillis();
