@@ -13,7 +13,7 @@ public class MessageProcessorPool<T> implements MessageProcessor<T> {
     }
 
     @Override
-    public void process(NetSession session, T message) {
+    public void process(NetSession<T> session, T message) {
         pool.execute(()->{
             processor.process(session, message);
         });

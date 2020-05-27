@@ -6,8 +6,10 @@ import java.nio.ByteBuffer;
 
 public class StringProtocol implements Protocol<String> {
     @Override
-    public String request(ByteBuffer buffer) {
-        byte[] bytes = new byte[buffer.remaining()];
+    public String decode(ByteBuffer buffer) {
+        int size = buffer.getInt();
+
+        byte[] bytes = new byte[size];
         buffer.get(bytes);
 
         return new String(bytes);
@@ -16,11 +18,14 @@ public class StringProtocol implements Protocol<String> {
     @Override
     public ByteBuffer encode(String meaage) {
         byte[] bytes = meaage.getBytes();
-        ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length);
+        int size = bytes.length;
 
-        buffer.put(bytes);
-        buffer.flip();
+        ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length + 4);
 
-        return buffer;
+        buf.putInt(size);
+        buf.put(bytes);
+        buf.flip();
+
+        return buf;
     }
 }

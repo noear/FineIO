@@ -13,7 +13,7 @@ public class ServerTest {
         MessageProcessor<String> processor = (session,message)->{
             try {
                 System.out.println("收到：" + message);
-                session.write("别来防我".getBytes());
+                session.write("别来防我");
             }catch (Throwable ex){
                 ex.printStackTrace();
             }

@@ -7,12 +7,12 @@ import java.nio.ByteBuffer;
 /**
  * 网络会话
  * */
-public abstract class NetSession {
+public abstract class NetSession<T> {
 
     /**
      * 写缓存
      * */
-    public abstract void write(ByteBuffer buf) throws IOException;
+    public abstract void write(T message) throws IOException;
 
     public abstract InetSocketAddress getLocalAddress() throws IOException;
 
@@ -21,17 +21,6 @@ public abstract class NetSession {
     public abstract boolean isOpen();
 
     public abstract void close() throws IOException;
-
-
-    /**
-     * 写入
-     * */
-    public void write(byte[] bytes) throws IOException{
-        ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
-        buf.put(bytes);
-        buf.flip();
-        write(buf);
-    }
 
     private Object _attachment;
     /**

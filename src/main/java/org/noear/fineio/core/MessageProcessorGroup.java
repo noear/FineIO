@@ -13,7 +13,7 @@ public class MessageProcessorGroup<T> implements MessageProcessor<T> {
     }
 
     @Override
-    public void process(NetSession session, T message) {
+    public void process(NetSession<T> session, T message) {
         for (MessageProcessor<T> processor : group) {
             processor.process(session, message);
         }

@@ -1,24 +1,28 @@
 package org.noear.fineio.solution.nio;
 
 import org.noear.fineio.core.NetSession;
+import org.noear.fineio.core.Protocol;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class NioSession extends NetSession {
+public class NioSession<T> extends NetSession<T> {
     private SocketChannel _channel;
+    private Protocol<T> _protocol;
 
-    public NioSession(SocketChannel channel){
+    public NioSession(SocketChannel channel, Protocol<T> protocol){
         _channel = channel;
+        _protocol = protocol;
     }
 
     /**
      * 写缓存
      * */
     @Override
-    public void write(ByteBuffer buf) throws IOException {
+    public void write(T message) throws IOException {
+        ByteBuffer buf = _protocol.encode(message);
         _channel.write(buf);
     }
 

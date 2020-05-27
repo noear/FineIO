@@ -103,7 +103,7 @@ public class NioServer<T> extends NetServer<T> {
         }
 
         if (key.isReadable()) {
-            SocketChannel channel = (SocketChannel) key.channel();
+            SocketChannel sc = (SocketChannel) key.channel();
             int size = -1;
 
             if (config.getProcessor() != null) {
@@ -111,7 +111,7 @@ public class NioServer<T> extends NetServer<T> {
                 //如果有处理器?
                 //
                 bufferClear();
-                size = channel.read(buffer);
+                size = sc.read(buffer);
 
                 if (size > 0) {
                     buffer.flip();
@@ -119,13 +119,13 @@ public class NioServer<T> extends NetServer<T> {
                     while (buffer.hasRemaining()) {
                         //尝试多次解码
                         //
-                        T message = config.getProtocol().request(buffer);
+                        T message = config.getProtocol().decode(buffer);
 
                         if (message != null) {
                             //
                             //如果message没有问题，则执行处理
                             //
-                            NetSession session = new NioSession(channel);
+                            NetSession<T> session = new NioSession<>(sc, config.getProtocol());
 
                             config.getProcessor().process(session, message);
                         }
@@ -135,7 +135,7 @@ public class NioServer<T> extends NetServer<T> {
 
             if (size < 0) {
                 key.cancel();
-                channel.close();
+                sc.close();
             }
         }
     }
