@@ -9,9 +9,9 @@ public class ServerTest {
         //定义处理器
         //
         MessageHandler<String> handler = (session, message)->{
-                System.out.println("收到：" + message);
+                System.out.println("我收到：" + message);
                 Thread.sleep(10);
-                session.write("收到：" + message);
+                session.write("我收到：" + message);
         };
 
         //启动服务

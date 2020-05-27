@@ -8,6 +8,8 @@ import test._future.CallUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientTest2 {
     public static void main(String[] args) {
@@ -17,7 +19,7 @@ public class ClientTest2 {
         long time_start = System.currentTimeMillis();
 
         MessageHandler<String> handler = (session, message) -> {
-            System.out.println(Thread.currentThread().getName() + "-客户端-收到：" + message + " -- " +  (System.currentTimeMillis() - time_start));
+            System.out.println(Thread.currentThread().getName() + "-客户端-收到：" + message + " -- " + (System.currentTimeMillis() - time_start));
         };
 
         //定义客户端
@@ -28,13 +30,12 @@ public class ClientTest2 {
 
         //测试（请选启动服务端）
         //
-        List<Integer> list = new ArrayList<>();
+        ExecutorService executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
         for (int i = 0; i < taskTotal; i++) {
-            list.add(i);
+            Integer no = i;
+            executors.execute(() -> {
+                CallUtil.call(() -> client.send("测试" + no));
+            });
         }
-
-        list.parallelStream().forEach(i -> {
-            CallUtil.call(() -> client.send("测试" + i));
-        });
     }
 }
