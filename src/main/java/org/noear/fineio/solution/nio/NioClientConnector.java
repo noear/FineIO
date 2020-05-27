@@ -162,6 +162,7 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
     @Override
     public void colse() {
         try {
+            colsed = true;
             channel.close();
         }catch (IOException ex){
             ex.printStackTrace();
