@@ -11,6 +11,16 @@ public final class FineIO {
             public NetClientConnector create(NetConfig cfg) throws Throwable {
                 return new NioClientConnector<T>(cfg).connection();
             }
+
+            @Override
+            public NetClientConnector open(NetClientConnector r) {
+                if (r.isOpen()) {
+                    return r;
+                } else {
+                    r.colse();
+                    return null;
+                }
+            }
         });
     }
 
