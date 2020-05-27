@@ -1,12 +1,11 @@
 package test.server;
 
-import org.noear.fineio.NetSession;
-import org.noear.fineio.SessionProcessor;
+import org.noear.fineio.core.NetSession;
+import org.noear.fineio.core.MessageProcessor;
 
-public class StringServerProcessor implements SessionProcessor<String> {
+public class StringServerProcessor implements MessageProcessor<String> {
     @Override
-    public void process(NetSession<String> session) {
-        String message = session.message();
+    public void process(NetSession session, String message) {
 
         try {
             System.out.println("收到：" + message);

@@ -26,12 +26,12 @@ public class ResourcePool<R> {
         free0();
     }
 
-    protected R open(R res) {
-        return res;
+    private R open(R res) {
+        return factory.open(res);
     }
 
-    protected R close(R res) {
-        return res;
+    private R close(R res) {
+        return factory.close(res);
     }
 
     /**
@@ -46,7 +46,7 @@ public class ResourcePool<R> {
             }
 
             if(r == null){
-                if(null != (r = factory.create())) {
+                if(null != (r = create0())) {
                     queue.offer(r);
                 }
             }
@@ -55,6 +55,15 @@ public class ResourcePool<R> {
         }
 
         return r;
+    }
+
+    private R create0(){
+        try{
+            return factory.create();
+        }catch (Throwable ex){
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     /**

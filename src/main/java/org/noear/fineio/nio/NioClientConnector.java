@@ -1,6 +1,8 @@
 package org.noear.fineio.nio;
 
-import org.noear.fineio.NetClientConnector;
+import org.noear.fineio.core.NetClientConnector;
+import org.noear.fineio.core.NetConfig;
+import org.noear.fineio.core.NetSession;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,23 +15,25 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class NioClientConnector<T> extends NetClientConnector<T> {
-    private ByteBuffer buffer = ByteBuffer.allocate(1024);
+    private ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
     private Selector selector;
     private CompletableFuture<Integer> sendFuture;
     private SocketChannel channel;
 
 
-    public NioClientConnector(){
-        sendFuture = new CompletableFuture<>();
+    public NioClientConnector(NetConfig<T> config){
+        super(config);
+        this.sendFuture = new CompletableFuture<>();
     }
 
-    public void connection() throws IOException {
+    public NetClientConnector<T> connection() throws IOException {
         selector = Selector.open();
 
         channel = SocketChannel.open();
         channel.configureBlocking(false);
 
-        if(channel.connect(address)){
+        //尝试连接
+        if(channel.connect(config.getAddress())){
             channel.register(selector, SelectionKey.OP_READ);
             sendFuture.complete(null);
         }else {
@@ -37,6 +41,8 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
         }
 
         new Thread(this::startDo).start();
+
+        return this;
     }
 
 
@@ -92,21 +98,28 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
         }
 
         if(key.isReadable()){
-            buffer.clear();
-            int size = sc.read(buffer);
+            int size = -1;
 
-            if (size > 0) {
-                buffer.flip();
+            if(config.getProcessor() != null) {
+                //
+                //如果有处理器?
+                //
+                bufferClear();
+                size = sc.read(buffer);
 
-                T message = protocol.request(buffer);
+                if (size > 0) {
+                    buffer.flip();
 
-                if (message != null) {
-                    //
-                    //如果message没有问题，则执行处理
-                    //
-                    NioSession<T> session = new NioSession<>(sc, message);
+                    T message = config.getProtocol().request(buffer);
 
-                    processor.process(session);
+                    if (message != null) {
+                        //
+                        //如果message没有问题，则执行处理
+                        //
+                        NetSession session = new NetSession(sc);
+
+                        config.getProcessor().process(session, message);
+                    }
                 }
             }
 
@@ -119,7 +132,7 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
 
     @Override
     public void send(T message) throws IOException {
-        ByteBuffer buffer = protocol.encode(message);
+        ByteBuffer buffer = config.getProtocol().encode(message);
 
         if (sendFuture != null) {
             try {
@@ -134,11 +147,15 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
         }
 
         channel.write(buffer);
-        //channel.shutdownOutput();
     }
 
     @Override
     public boolean isOpen() {
         return channel.isOpen();
+    }
+
+    private void bufferClear(){
+        buffer.position(0);
+        buffer.limit(buffer.capacity());
     }
 }

@@ -1,16 +1,14 @@
 package test.client;
 
-import org.noear.fineio.FineNIO;
-import org.noear.fineio.NetClient;
+import org.noear.fineio.FineIO;
+import org.noear.fineio.core.NetClient;
 import test.StringProtocol;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ClientTest2 {
     public static void main(String[] args) {
-        NetClient<String> client = FineNIO.client(new StringProtocol(), new StringClientProcessor())
-                                         .bind("localhost", 8080);
+        NetClient<String> client = FineIO.client(new StringProtocol())
+                .receive(new StringClientProcessor())
+                .bind("localhost", 8080);
 
         try {
             client.send("测试1");

@@ -1,16 +1,15 @@
 package test.client;
 
-import org.noear.fineio.SessionProcessor;
-import org.noear.fineio.NetSession;
+import org.noear.fineio.core.MessageProcessor;
+import org.noear.fineio.core.NetSession;
 
-public class StringClientProcessor implements SessionProcessor<String> {
+public class StringClientProcessor implements MessageProcessor<String> {
     int count = 0;
     int total = 1000 * 1000;
     long time_start = 0;
 
     @Override
-    public void process(NetSession<String> session) {
-        String message = session.message();
+    public void process(NetSession session, String message) {
 
         try {
             System.out.println(Thread.currentThread().getName()+"-客户端：收到：" + message);

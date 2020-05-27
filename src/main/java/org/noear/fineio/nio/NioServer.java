@@ -1,6 +1,8 @@
 package org.noear.fineio.nio;
 
-import org.noear.fineio.NetServer;
+import org.noear.fineio.core.NetServer;
+import org.noear.fineio.core.NetSession;
+import org.noear.fineio.core.Protocol;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,6 +15,10 @@ import java.util.Iterator;
 public class NioServer<T> extends NetServer<T> {
     private ByteBuffer buffer = ByteBuffer.allocateDirect(1024);
     private Selector selector;
+
+    public NioServer(Protocol<T> protocol){
+        config.setProtocol(protocol);
+    }
 
     /**
      * 开始
@@ -35,7 +41,7 @@ public class NioServer<T> extends NetServer<T> {
     private void start0() throws IOException {
         ServerSocketChannel ssc =  ServerSocketChannel.open();
         ssc.configureBlocking(false);
-        ssc.socket().bind(address);
+        ssc.socket().bind(config.getAddress());
 
         selector = Selector.open();
 
@@ -98,26 +104,32 @@ public class NioServer<T> extends NetServer<T> {
 
         if (key.isReadable()) {
             SocketChannel channel = (SocketChannel) key.channel();
+            int size = -1;
 
-            bufferClear();
-            int size = channel.read(buffer);
+            if (config.getProcessor() != null) {
+                //
+                //如果有处理器?
+                //
+                bufferClear();
+                size = channel.read(buffer);
 
-            if(size > 0) {
-                buffer.flip();
+                if (size > 0) {
+                    buffer.flip();
 
-                T message = protocol.request(buffer);
+                    T message = config.getProtocol().request(buffer);
 
-                if (message != null) {
-                    //
-                    //如果message没有问题，则执行处理
-                    //
-                    NioSession<T> session = new NioSession<>(channel, message);
+                    if (message != null) {
+                        //
+                        //如果message没有问题，则执行处理
+                        //
+                        NetSession session = new NetSession(channel);
 
-                    processor.process(session);
+                        config.getProcessor().process(session, message);
+                    }
                 }
             }
 
-            if(size < 0){
+            if (size < 0) {
                 key.cancel();
                 channel.close();
             }

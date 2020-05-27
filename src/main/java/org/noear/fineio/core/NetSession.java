@@ -1,6 +1,4 @@
-package org.noear.fineio.nio;
-
-import org.noear.fineio.NetSession;
+package org.noear.fineio.core;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -8,50 +6,56 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 /**
- * 会话
+ * 网络会话
  * */
-public class NioSession<T> extends NetSession<T> {
+public class NetSession {
     private SocketChannel _channel;
-    private  T _message;
 
-    protected NioSession(SocketChannel channel, T message){
+    public NetSession(SocketChannel channel){
         _channel = channel;
-        _message = message;
     }
 
     /**
      * 写缓存
      * */
-    @Override
-    public void write(ByteBuffer buffer) throws IOException{
-         _channel.write(buffer);
+    public void write(ByteBuffer buf) throws IOException{
+        _channel.write(buf);
     }
 
-    /**
-     * 解码后的消息
-     * */
-    @Override
-    public T message(){
-        return _message;
+    public void write(byte[] bytes) throws IOException{
+        ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length);
+        buf.put(bytes);
+        write(buf);
     }
 
-    @Override
     public  InetSocketAddress getLocalAddress() throws IOException{
         return (InetSocketAddress)_channel.getLocalAddress();
     }
 
-    @Override
     public  InetSocketAddress getRemoteAddress() throws IOException{
         return (InetSocketAddress)_channel.getRemoteAddress();
     }
 
-    @Override
     public boolean isOpen() {
         return _channel.isOpen();
     }
 
-    @Override
     public void close() throws IOException {
         _channel.close();
+    }
+
+    private Object _attachment;
+    /**
+     * 附件
+     * */
+    public Object attachment(){
+        return _attachment;
+    }
+
+    /**
+     * 设置附件
+     * */
+    public void attachmentSet(Object obj){
+        _attachment = obj;
     }
 }

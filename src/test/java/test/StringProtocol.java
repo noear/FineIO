@@ -1,6 +1,6 @@
 package test;
 
-import org.noear.fineio.Protocol;
+import org.noear.fineio.core.Protocol;
 
 import java.nio.ByteBuffer;
 
