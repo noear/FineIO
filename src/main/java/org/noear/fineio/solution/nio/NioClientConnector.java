@@ -145,7 +145,7 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
                 connectionFuture.get(config.getConnectionTimeout(), TimeUnit.SECONDS);
                 connectionFuture = null;
             } catch (Exception ex) {
-                throw new IOException("Connection timeout");
+                throw new IOException("Connection timeout!");
             }
 
         }
@@ -157,6 +157,16 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
     @Override
     public boolean isOpen() {
         return channel.isOpen();
+    }
+
+    @Override
+    public void colse() {
+        super.colse();
+        try {
+            channel.close();
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
     }
 
     private void bufferClear(){

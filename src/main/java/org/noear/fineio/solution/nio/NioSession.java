@@ -22,8 +22,10 @@ public class NioSession<T> extends NetSession<T> {
      * */
     @Override
     public void write(T message) throws IOException {
-        ByteBuffer buf = _protocol.encode(message);
-        _channel.write(buf);
+        if(isOpen()) {
+            ByteBuffer buf = _protocol.encode(message);
+            _channel.write(buf);
+        }
     }
 
     @Override
