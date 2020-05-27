@@ -63,8 +63,8 @@ public class NetClient<T> {
     /**
      * 接收
      * */
-    public NetClient<T> handle(MessageHandler<T> processor){
-        config.setHandler(processor);
+    public NetClient<T> handle(MessageHandler<T> handler){
+        config.setHandler(handler);
         return this;
     }
 

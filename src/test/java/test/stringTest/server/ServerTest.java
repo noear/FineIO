@@ -8,7 +8,7 @@ public class ServerTest {
     public static void main(String[] args) {
         //定义处理器
         //
-        MessageHandler<String> processor = (session, message)->{
+        MessageHandler<String> handler = (session, message)->{
                 System.out.println("收到：" + message);
                 Thread.sleep(10);
                 session.write("收到：" + message);
@@ -18,14 +18,14 @@ public class ServerTest {
         //
         FineIO.server(new StringProtocol())
                 .bind("localhost", 8080)
-                .handle(processor.pools())
+                .handle(handler.pools())
                 .start(false);
 
 
 
         /**
-         * 处理时间短的：processor
-         * 处理时间长的：10ms或以上，用 processor.pools() //线程池模式
+         * 处理时间短的：handler
+         * 处理时间长的：10ms或以上，用 handler.pools() //线程池模式
          * */
     }
 }

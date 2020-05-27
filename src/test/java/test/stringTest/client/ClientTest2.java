@@ -16,14 +16,14 @@ public class ClientTest2 {
         int taskTotal = 1000;
         long time_start = System.currentTimeMillis();
 
-        MessageHandler<String> processor = (session, message) -> {
+        MessageHandler<String> handler = (session, message) -> {
             System.out.println(Thread.currentThread().getName() + "-客户端-收到：" + message + " -- " +  (System.currentTimeMillis() - time_start));
         };
 
         //定义客户端
         //
         NetClient<String> client = FineIO.client(new StringProtocol())
-                .handle(processor)
+                .handle(handler)
                 .bind("localhost", 8080);
 
         //测试（请选启动服务端）
