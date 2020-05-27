@@ -30,7 +30,7 @@ public class NioTcpAcceptor<T> {
 
         int size = -1;
 
-        if (config.getProcessor() != null) {
+        if (config.getHandler() != null) {
             //
             //如果有处理器?
             //
@@ -62,7 +62,7 @@ public class NioTcpAcceptor<T> {
                         NetSession<T> session = new NioTcpSession<>(sc, config.getProtocol());
 
                         try {
-                            config.getProcessor().process(session, message);
+                            config.getHandler().handle(session, message);
                         } catch (Throwable ex) {
                             ex.printStackTrace();
                         }

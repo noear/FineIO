@@ -6,7 +6,7 @@ public class NetConfig<T> {
     /**
      * 处理器
      * */
-    private MessageProcessor<T> processor;
+    private MessageHandler<T> handler;
     /**
      * 协议
      * */
@@ -28,8 +28,8 @@ public class NetConfig<T> {
 
 
 
-    public MessageProcessor<T> getProcessor() {
-        return processor;
+    public MessageHandler<T> getHandler() {
+        return handler;
     }
     public Protocol<T> getProtocol() {
         return protocol;
@@ -45,8 +45,8 @@ public class NetConfig<T> {
         return bufferSize;
     }
 
-    public void setProcessor(MessageProcessor<T> processor) {
-        this.processor = processor;
+    public void setHandler(MessageHandler<T> handler) {
+        this.handler = handler;
     }
     public void setProtocol(Protocol<T> protocol) {
         this.protocol = protocol;

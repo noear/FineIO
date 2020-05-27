@@ -22,8 +22,8 @@ public abstract class NetServer<T> {
         return this;
     }
 
-    public NetServer<T> process(MessageProcessor<T> processor){
-        config.setProcessor(processor);
+    public NetServer<T> handle(MessageHandler<T> processor){
+        config.setHandler(processor);
         return this;
     }
 

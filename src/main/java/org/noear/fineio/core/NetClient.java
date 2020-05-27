@@ -63,8 +63,8 @@ public class NetClient<T> {
     /**
      * 接收
      * */
-    public NetClient<T> receive(MessageProcessor<T> processor){
-        config.setProcessor(processor);
+    public NetClient<T> handle(MessageHandler<T> processor){
+        config.setHandler(processor);
         return this;
     }
 
@@ -89,6 +89,9 @@ public class NetClient<T> {
         }
     }
 
+    /**
+     * 获取一个连接
+     * */
     public NetClientConnector<T> getConnector(){
        return pool.apply();
     }

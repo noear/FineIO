@@ -1,7 +1,7 @@
 package test.stringTest.client;
 
 import org.noear.fineio.FineIO;
-import org.noear.fineio.core.MessageProcessor;
+import org.noear.fineio.core.MessageHandler;
 import org.noear.fineio.core.NetClient;
 import org.noear.fineio.core.NetClientConnector;
 import test.stringTest.StringProtocol;
@@ -11,14 +11,14 @@ public class ClientTest1 {
     public static void main(String[] args) {
         //定义接收处理器
         //
-        MessageProcessor<String> processor = (session,message)->{
+        MessageHandler<String> handler = (session, message)->{
             System.out.println(Thread.currentThread().getName()+"-客户端：收到：" + message);
         };
 
         //定义客户端
         //
         NetClient<String> client = FineIO.client(new StringProtocol())
-                .receive(processor)
+                .handle(handler)
                 .bind("localhost", 8080);
 
         NetClientConnector<String> connector = client.getConnector();
