@@ -26,8 +26,6 @@ public class ClientTest2 {
                 .receive(processor)
                 .bind("localhost", 8080);
 
-        NetClientConnector<String> connector = client.getConnector();
-
         //测试（请选启动服务端）
         //
         List<Integer> list = new ArrayList<>();
