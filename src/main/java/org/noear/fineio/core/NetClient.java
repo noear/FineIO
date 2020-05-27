@@ -23,8 +23,8 @@ public class NetClient<T> {
             }
 
             @Override
-            public NetClientConnector<T> open(NetClientConnector<T> connector) {
-                return connectorFactory.open(connector);
+            public NetClientConnector<T> check(NetClientConnector<T> connector) {
+                return connectorFactory.check(connector);
             }
 
             @Override
@@ -71,7 +71,7 @@ public class NetClient<T> {
 
         NetClientConnector<T> c = pool.apply();
 
-        if(c != null) {
+        if(c != null && c.isOpen()) {
             c.send(message);
             pool.free();
         }else{

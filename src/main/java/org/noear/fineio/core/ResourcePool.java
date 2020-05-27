@@ -28,8 +28,8 @@ public class ResourcePool<R> {
         free0();
     }
 
-    private R open(R res) {
-        return factory.open(res);
+    private R check(R res) {
+        return factory.check(res);
     }
 
     private R close(R res) {
@@ -42,9 +42,13 @@ public class ResourcePool<R> {
     private R apply0() throws InterruptedException {
         R r = threadLocal.get();
 
+        if(r!=null) {
+            r = check(r);
+        }
+
         if (r == null) {
             if (queue.isEmpty() == false) {
-                r = open(queue.take());
+                r = check(queue.take());
             }
 
             if(r == null){

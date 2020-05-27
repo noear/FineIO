@@ -12,7 +12,7 @@ public interface ResourceFactory<R> {
     /**
      * 打开资源（可以打开时，进行检测）
      * */
-    default R open(R r){
+    default R check(R r){
         return r;
     }
 

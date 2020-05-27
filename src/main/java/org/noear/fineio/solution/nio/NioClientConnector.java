@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class NioClientConnector<T> extends NetClientConnector<T> {
     private final ByteBuffer readBuffer;
-    private final CompletableFuture<Integer> connectionFuture;
+    private CompletableFuture<Integer> connectionFuture;
 
     private Selector selector;
     private SocketChannel channel;
@@ -143,8 +143,9 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
                 //3秒，则算超时
                 //
                 connectionFuture.get(config.getConnectionTimeout(), TimeUnit.SECONDS);
+                connectionFuture = null;
             } catch (Exception ex) {
-              throw new IOException("Connection timeout");
+                throw new IOException("Connection timeout");
             }
 
         }

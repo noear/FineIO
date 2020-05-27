@@ -13,7 +13,7 @@ public final class FineIO {
             }
 
             @Override
-            public NetClientConnector<T> open(NetClientConnector<T> r) {
+            public NetClientConnector<T> check(NetClientConnector<T> r) {
                 if (r.isOpen()) {
                     return r;
                 } else {
