@@ -83,7 +83,7 @@ public class NioTcpClientConnector<T> extends NetClientConnector<T> {
         }
     }
 
-    private void selectDo(SelectionKey key) throws ClosedChannelException,IOException{
+    private void selectDo(SelectionKey key) throws IOException{
         if(key == null || key.isValid() == false){
             return;
         }

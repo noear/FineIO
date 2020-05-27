@@ -67,9 +67,6 @@ public class NioTcpServer<T> extends NetServer<T> {
                         selectDo(key);
                     } catch (Throwable ex) {
                         ex.printStackTrace();
-//                        if (key != null && key.channel() != null) {
-//                            key.channel().close();
-//                        }
                     }
                 }
             } catch (Throwable ex) {
