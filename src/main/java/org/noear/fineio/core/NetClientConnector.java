@@ -30,14 +30,10 @@ public abstract class NetClientConnector<T> {
     /**
      * 是否已打开
      * */
-    public abstract boolean isOpen();
+    public abstract boolean isValid();
 
     /**
      * 关闭
      */
-    public void colse() {
-        colsed = true;
-    }
-
-    protected boolean colsed = false;
+    public abstract void colse();
 }

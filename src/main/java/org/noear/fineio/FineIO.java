@@ -14,7 +14,7 @@ public final class FineIO {
 
             @Override
             public NetClientConnector<T> check(NetClientConnector<T> r) {
-                if (r.isOpen()) {
+                if (r.isValid()) {
                     return r;
                 } else {
                     r.colse();

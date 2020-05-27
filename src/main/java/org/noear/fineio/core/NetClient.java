@@ -71,7 +71,7 @@ public class NetClient<T> {
 
         NetClientConnector<T> c = pool.apply();
 
-        if(c != null && c.isOpen()) {
+        if(c != null && c.isValid()) {
             c.send(message);
             pool.free();
         }else{

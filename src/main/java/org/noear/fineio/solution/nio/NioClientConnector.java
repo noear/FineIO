@@ -155,19 +155,19 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
     }
 
     @Override
-    public boolean isOpen() {
-        return channel.isOpen();
+    public boolean isValid() {
+        return channel.isConnected();
     }
 
     @Override
     public void colse() {
-        super.colse();
         try {
             channel.close();
         }catch (IOException ex){
             ex.printStackTrace();
         }
     }
+    private boolean colsed;
 
     private void bufferClear(){
         readBuffer.position(0);

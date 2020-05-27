@@ -18,7 +18,7 @@ public abstract class NetSession<T> {
 
     public abstract InetSocketAddress getRemoteAddress() throws IOException;
 
-    public abstract boolean isOpen();
+    public abstract boolean isValid();
 
     public abstract void close() throws IOException;
 

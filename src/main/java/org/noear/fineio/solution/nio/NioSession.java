@@ -22,7 +22,7 @@ public class NioSession<T> extends NetSession<T> {
      * */
     @Override
     public void write(T message) throws IOException {
-        if(isOpen()) {
+        if(isValid()) {
             ByteBuffer buf = _protocol.encode(message);
             _channel.write(buf);
         }
@@ -39,8 +39,8 @@ public class NioSession<T> extends NetSession<T> {
     }
 
     @Override
-    public boolean isOpen() {
-        return _channel.isOpen();
+    public boolean isValid() {
+        return _channel.isConnected();
     }
 
     @Override
