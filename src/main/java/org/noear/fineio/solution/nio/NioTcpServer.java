@@ -1,5 +1,6 @@
 package org.noear.fineio.solution.nio;
 
+import org.noear.fineio.core.NetConfig;
 import org.noear.fineio.core.NetServer;
 import org.noear.fineio.core.Protocol;
 
@@ -16,6 +17,11 @@ public class NioTcpServer<T> extends NetServer<T> {
     private NioTcpAcceptor<T> acceptor;
 
     public NioTcpServer(Protocol<T> protocol) {
+        this(protocol, new NetConfig<T>());
+    }
+
+    public NioTcpServer(Protocol<T> protocol, NetConfig<T> cfg) {
+        super(cfg);
         config.setProtocol(protocol);
         acceptor = new NioTcpAcceptor<>(config);
     }

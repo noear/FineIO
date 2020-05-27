@@ -11,7 +11,11 @@ public class NetClient<T> {
     private final NetConfig<T> config;
 
     public NetClient(Protocol<T> protocol, NetClientConnectorFactory<T> connectorFactory) {
-        this.config = new NetConfig<>();
+        this(protocol, new NetConfig<T>(), connectorFactory);
+    }
+
+    public NetClient(Protocol<T> protocol, NetConfig<T> cfg, NetClientConnectorFactory<T> connectorFactory) {
+        this.config = cfg;
         this.config.setProtocol(protocol);
 
         this.pool = new ResourcePool<>(Runtime.getRuntime().availableProcessors(), new ResourceFactory<NetClientConnector<T>>() {
@@ -37,7 +41,7 @@ public class NetClient<T> {
         });
     }
 
-    public NetConfig<T> config(){
+    public NetConfig<T> config() {
         return this.config;
     }
 
@@ -55,15 +59,15 @@ public class NetClient<T> {
         }
     }
 
-    public NetClient<T> connectionTimeout(int seconds){
+    public NetClient<T> connectionTimeout(int seconds) {
         config.setConnectionTimeout(seconds);
         return this;
     }
 
     /**
      * 接收
-     * */
-    public NetClient<T> handle(MessageHandler<T> handler){
+     */
+    public NetClient<T> handle(MessageHandler<T> handler) {
         config.setHandler(handler);
         return this;
     }
@@ -72,34 +76,34 @@ public class NetClient<T> {
      * 发送
      */
     public void send(T message) throws IOException {
-        if(pool == null){
+        if (pool == null) {
             return;
         }
 
         NetClientConnector<T> c = pool.apply();
 
-        if(c != null) {
+        if (c != null) {
             try {
                 c.send(message);
-            }finally {
+            } finally {
                 pool.free();
             }
-        }else{
+        } else {
             throw new IOException("Failed to get connection!");
         }
     }
 
     /**
      * 获取一个连接
-     * */
-    public NetClientConnector<T> getConnector(){
-       return pool.apply();
+     */
+    public NetClientConnector<T> getConnector() {
+        return pool.apply();
     }
 
     /**
      * 关闭客户端
-     * */
-    public void colse(){
+     */
+    public void colse() {
         pool.clear();
     }
 }

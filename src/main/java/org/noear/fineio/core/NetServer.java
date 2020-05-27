@@ -10,7 +10,11 @@ public abstract class NetServer<T> {
     /**
      * 配置
      * */
-    protected final NetConfig<T> config = new NetConfig<>();
+    protected final NetConfig<T> config;
+
+    public NetServer(NetConfig<T> config){
+        this.config = config;
+    }
 
     public NetServer<T> bind(InetSocketAddress address) {
         config.setAddress(address);
