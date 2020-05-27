@@ -14,7 +14,7 @@ public class ClientTest2 {
     public static void main(String[] args) {
         //定义接收处理器
         //
-        int taskTotal = 1000 * 100;
+        int taskTotal = 1000;
         long time_start = System.currentTimeMillis();
 
         MessageProcessor<String> processor = (session, message) -> {

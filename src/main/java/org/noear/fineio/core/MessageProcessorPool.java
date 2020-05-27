@@ -22,4 +22,9 @@ public class MessageProcessorPool<T> implements MessageProcessor<T> {
             }
         });
     }
+
+    @Override
+    public MessageProcessorPool<T> pools() {
+        return this;
+    }
 }
