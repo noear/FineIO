@@ -24,11 +24,10 @@ public class StringProtocol implements Protocol<String> {
     @Override
     public ByteBuffer encode(String meaage) {
         byte[] bytes = meaage.getBytes();
-        int size = bytes.length;
 
         ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length + 4);
 
-        buf.putInt(size);
+        buf.putInt(bytes.length);
         buf.put(bytes);
         buf.flip();
 
