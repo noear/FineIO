@@ -20,11 +20,9 @@ public class ClientTest2 {
 
         MessageProcessor<String> processor = (session, message) -> {
             int idx = atomicCount.incrementAndGet();
-            System.out.println(Thread.currentThread().getName() + "-客户端-" + idx + "-收到：" + message);
+            long times = (System.currentTimeMillis() - time_start);
 
-            if (idx == taskTotal) {
-                System.out.println("用时：" + (System.currentTimeMillis() - time_start));
-            }
+            System.out.println(Thread.currentThread().getName() + "-客户端-" + idx + "-收到：" + message + " -用时：" + times);
         };
 
         //定义客户端
