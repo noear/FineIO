@@ -1,7 +1,4 @@
-package org.noear.fineio.extension;
-
-import org.noear.fineio.core.MessageProcessor;
-import org.noear.fineio.core.NetSession;
+package org.noear.fineio.core;
 
 import java.util.ArrayList;
 

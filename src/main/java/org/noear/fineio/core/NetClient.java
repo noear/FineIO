@@ -1,8 +1,5 @@
 package org.noear.fineio.core;
 
-import org.noear.fineio.extension.ResourceFactory;
-import org.noear.fineio.extension.ResourcePool;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 

@@ -1,7 +1,10 @@
-package org.noear.fineio.extension;
+package org.noear.fineio.core;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * 资源池
+ * */
 public class ResourcePool<R> {
     private final LinkedBlockingQueue<R> queue = new LinkedBlockingQueue<>();
     private final ThreadLocal<R> threadLocal = new ThreadLocal<>();
