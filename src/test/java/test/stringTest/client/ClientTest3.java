@@ -44,12 +44,16 @@ public class ClientTest3 {
     }
 
     private static void test(NetClient<String> client) throws IOException{
+        StringBuffer sb = new StringBuffer();
         while (true) {
+            sb.setLength(0);
             int num = (int) (Math.random() * 10) + 1;
 
             while (num-- > 0) {
-                CallUtil.call(() -> client.send("测试"));
+                sb.append("FineIO");
             }
+
+            CallUtil.call(() -> client.send(sb.toString()));
         }
     }
 }
