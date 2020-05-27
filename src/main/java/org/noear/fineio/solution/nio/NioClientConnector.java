@@ -110,15 +110,19 @@ public class NioClientConnector<T> extends NetClientConnector<T> {
                 if (size > 0) {
                     buffer.flip();
 
-                    T message = config.getProtocol().request(buffer);
-
-                    if (message != null) {
+                    while (buffer.hasRemaining()) {
+                        //尝试多次解码
                         //
-                        //如果message没有问题，则执行处理
-                        //
-                        NetSession session = new NioSession(sc);
+                        T message = config.getProtocol().request(buffer);
 
-                        config.getProcessor().process(session, message);
+                        if (message != null) {
+                            //
+                            //如果message没有问题，则执行处理
+                            //
+                            NetSession session = new NioSession(sc);
+
+                            config.getProcessor().process(session, message);
+                        }
                     }
                 }
             }
