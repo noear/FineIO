@@ -6,15 +6,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  * 资源池
  * */
 public class ResourcePool<R> {
-    private final LinkedBlockingQueue<R> queue = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<R> queue;
     private final ThreadLocal<R> threadLocal = new ThreadLocal<>();
 
-    private int coreSize;
     private ResourceFactory<R> factory;
 
     public ResourcePool(int coreSize, ResourceFactory<R> factory) {
-        this.coreSize = coreSize;
         this.factory = factory;
+        this.queue = new LinkedBlockingQueue<>(coreSize);
     }
 
     public R apply() {

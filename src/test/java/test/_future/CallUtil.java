@@ -5,6 +5,7 @@ public class CallUtil {
         try{
             fun.run();
         }catch (Throwable ex){
+            System.out.println(Thread.currentThread().getName());
             ex.printStackTrace();
         }
     }
