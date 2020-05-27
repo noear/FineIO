@@ -17,7 +17,7 @@ public class ServerTest {
         //启动服务
         //
         FineIO.server(new StringProtocol())
-                .process(processor)
+                .process(processor.pools())
                 .bind("localhost", 8080)
                 .start(false);
 
