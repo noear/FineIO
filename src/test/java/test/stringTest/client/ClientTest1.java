@@ -16,9 +16,7 @@ public class ClientTest1 {
 
         //定义客户端
         //
-        NetClient<String> client = FineIO.client(new StringProtocol())
-                .handle(handler)
-                .bind("localhost", 8080);
+        var client = FineIO.client(new StringProtocol()).handle(handler).bind("localhost", 8080);
 
         //测试（请选启动服务端）
         //
