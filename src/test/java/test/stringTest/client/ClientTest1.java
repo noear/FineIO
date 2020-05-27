@@ -2,6 +2,7 @@ package test.stringTest.client;
 
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageHandler;
+import org.noear.fineio.core.NetClient;
 import test.stringTest.StringProtocol;
 import test._future.CallUtil;
 
@@ -15,7 +16,7 @@ public class ClientTest1 {
 
         //定义客户端
         //
-        var client = FineIO.client(new StringProtocol()).handle(handler).bind("localhost", 8888);
+        NetClient<String> client = FineIO.client(new StringProtocol()).handle(handler).bind("localhost", 8888);
 
         //测试（请选启动服务端）
         //
