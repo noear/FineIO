@@ -1,7 +1,7 @@
 package org.noear.fineio;
 
 import org.noear.fineio.core.*;
-import org.noear.fineio.tcp.NioTcpClientConnector;
+import org.noear.fineio.tcp.NioTcpConnector;
 import org.noear.fineio.tcp.NioTcpServer;
 
 public final class FineIO {
@@ -13,7 +13,7 @@ public final class FineIO {
         return new NetClient(protocol, cfg, new NetConnectorFactory<T>() {
             @Override
             public NetConnector<T> create(Config cfg) throws Throwable {
-                return new NioTcpClientConnector<T>(cfg).connection();
+                return new NioTcpConnector<T>(cfg).connection();
             }
 
             @Override

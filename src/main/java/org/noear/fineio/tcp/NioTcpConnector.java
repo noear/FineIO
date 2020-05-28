@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-public class NioTcpClientConnector<T> extends NetConnector<T> {
+public class NioTcpConnector<T> extends NetConnector<T> {
 
     private CompletableFuture<Integer> connectionFuture;
 
@@ -21,7 +21,7 @@ public class NioTcpClientConnector<T> extends NetConnector<T> {
     private final NioTcpAcceptor<T> acceptor;
 
 
-    public NioTcpClientConnector(Config<T> config){
+    public NioTcpConnector(Config<T> config){
         super(config);
         this.connectionFuture = new CompletableFuture<>();
         this.acceptor = new NioTcpAcceptor<>(config, false);
