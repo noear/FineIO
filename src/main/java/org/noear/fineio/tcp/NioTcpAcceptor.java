@@ -11,7 +11,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class NioTcpAcceptor<T> {
-    private static final String broken_pipe ="Broken pipe";
+    private static final String err_broken_pipe ="Broken pipe";
+    private static final String err_protocol_wrong = "Protocol wrong type for socket";
     //缓冲
     private final ThreadLocal<ByteBuffer> thReadBuffer;
     //临时缓冲（用于转移半包内容）
@@ -73,7 +74,7 @@ public class NioTcpAcceptor<T> {
         } catch (ClosedChannelException ex) {
             close0(key);
         } catch (IOException ex) {
-            if(broken_pipe.equals(ex.getMessage())) {
+            if(err_broken_pipe.equals(ex.getMessage()) || err_protocol_wrong.equals(ex.getMessage())) {
                 close0(key);
             }else{
                 ex.printStackTrace();
