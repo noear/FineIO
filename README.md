@@ -57,7 +57,7 @@ public class ClientTest1 {
 public class StringProtocol implements Protocol<String> {
     @Override
     public String decode(ByteBuffer buffer) {
-        if (buffer.remaining() >= Integer.BYTES) {
+        if (buffer.remaining() > Integer.BYTES) {
             int size = buffer.getInt();
 
             if (size > 0 && size <= buffer.remaining()) {
@@ -72,8 +72,8 @@ public class StringProtocol implements Protocol<String> {
     }
 
     @Override
-    public ByteBuffer encode(String meaage) {
-        byte[] bytes = meaage.getBytes();
+    public ByteBuffer encode(String message) {
+        byte[] bytes = message.getBytes();
 
         ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length + Integer.BYTES);
 
