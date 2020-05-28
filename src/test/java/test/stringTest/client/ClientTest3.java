@@ -3,7 +3,6 @@ package test.stringTest.client;
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageHandler;
 import org.noear.fineio.core.NetClient;
-import test._future.CallUtil;
 import test.stringTest.StringProtocol;
 
 import java.io.IOException;
@@ -47,7 +46,7 @@ public class ClientTest3 {
                 sb.append("FineIO");
             }
 
-            CallUtil.call(() -> client.send(sb.toString()));
+            client.send(sb.toString());
         }
     }
 }

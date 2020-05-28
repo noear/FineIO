@@ -1,5 +1,7 @@
 package org.noear.fineio.core;
 
+import org.noear.fineio.FineException;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
@@ -75,21 +77,21 @@ public class NetClient<T> {
     /**
      * 发送
      */
-    public void send(T message) throws IOException {
-        if (pool == null) {
-            return;
-        }
-
+    public void send(T message) {
         NetClientConnector<T> c = pool.apply();
 
         if (c != null) {
             try {
                 c.send(message);
-            } finally {
+            }
+            catch (IOException ex){
+                throw new FineException(ex);
+            }
+            finally {
                 pool.free();
             }
         } else {
-            throw new IOException("Failed to get connection!");
+            throw new FineException("Failed to get connection!");
         }
     }
 

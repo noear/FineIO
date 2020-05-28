@@ -4,7 +4,6 @@ import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageHandler;
 import org.noear.fineio.core.NetClient;
 import test.stringTest.StringProtocol;
-import test._future.CallUtil;
 
 public class ClientTest1 {
     public static void main(String[] args) {
@@ -20,7 +19,7 @@ public class ClientTest1 {
 
         //测试（请选启动服务端）
         //
-        CallUtil.call(()->client.send("测试1"));
-        CallUtil.call(()->client.send("测试2"));
+        client.send("测试1");
+        client.send("测试2");
     }
 }
