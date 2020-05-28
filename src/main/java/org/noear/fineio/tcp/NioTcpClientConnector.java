@@ -1,6 +1,6 @@
 package org.noear.fineio.tcp;
 
-import org.noear.fineio.core.NetClientConnector;
+import org.noear.fineio.core.NetConnector;
 import org.noear.fineio.core.Config;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-public class NioTcpClientConnector<T> extends NetClientConnector<T> {
+public class NioTcpClientConnector<T> extends NetConnector<T> {
 
     private CompletableFuture<Integer> connectionFuture;
 
@@ -27,7 +27,7 @@ public class NioTcpClientConnector<T> extends NetClientConnector<T> {
         this.acceptor = new NioTcpAcceptor<>(config, false);
     }
 
-    public NetClientConnector<T> connection() throws IOException {
+    public NetConnector<T> connection() throws IOException {
         selector = Selector.open();
 
         channel = SocketChannel.open();

@@ -9,35 +9,35 @@ import java.net.InetSocketAddress;
  * 网络客户端
  * */
 public class NetClient<T> {
-    private ResourcePool<NetClientConnector<T>> pool;
+    private ResourcePool<NetConnector<T>> connectors;
     private final Config<T> config;
 
-    public NetClient(Protocol<T> protocol, NetClientConnectorFactory<T> connectorFactory) {
+    public NetClient(Protocol<T> protocol, NetConnectorFactory<T> connectorFactory) {
         this(protocol, new Config<T>(), connectorFactory);
     }
 
-    public NetClient(Protocol<T> protocol, Config<T> cfg, NetClientConnectorFactory<T> connectorFactory) {
+    public NetClient(Protocol<T> protocol, Config<T> cfg, NetConnectorFactory<T> connectorFactory) {
         this.config = cfg;
         this.config.setProtocol(protocol);
 
-        this.pool = new ResourcePool<>(Runtime.getRuntime().availableProcessors(), new ResourceFactory<NetClientConnector<T>>() {
+        this.connectors = new ResourcePool<>(Runtime.getRuntime().availableProcessors(), new ResourceFactory<NetConnector<T>>() {
             @Override
-            public NetClientConnector<T> create() throws Throwable {
+            public NetConnector<T> create() throws Throwable {
                 return connectorFactory.create(config);
             }
 
             @Override
-            public NetClientConnector<T> check(NetClientConnector<T> connector) {
+            public NetConnector<T> check(NetConnector<T> connector) {
                 return connectorFactory.check(connector);
             }
 
             @Override
-            public NetClientConnector<T> free(NetClientConnector<T> connector) {
+            public NetConnector<T> free(NetConnector<T> connector) {
                 return connectorFactory.free(connector);
             }
 
             @Override
-            public void close(NetClientConnector<T> connector) {
+            public void close(NetConnector<T> connector) {
                 connectorFactory.close(connector);
             }
         });
@@ -78,7 +78,7 @@ public class NetClient<T> {
      * 发送
      */
     public void send(T message) {
-        NetClientConnector<T> c = pool.apply();
+        NetConnector<T> c = connectors.apply();
 
         if (c != null) {
             try {
@@ -88,7 +88,7 @@ public class NetClient<T> {
                 throw new FineException(ex);
             }
             finally {
-                pool.free();
+                connectors.free();
             }
         } else {
             throw new FineException("Failed to get connection!");
@@ -98,14 +98,14 @@ public class NetClient<T> {
     /**
      * 获取一个连接
      */
-    public NetClientConnector<T> getConnector() {
-        return pool.apply();
+    public NetConnector<T> getConnector() {
+        return connectors.apply();
     }
 
     /**
      * 关闭客户端
      */
     public void colse() {
-        pool.clear();
+        connectors.clear();
     }
 }

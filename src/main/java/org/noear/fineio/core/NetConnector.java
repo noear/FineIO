@@ -2,7 +2,7 @@ package org.noear.fineio.core;
 
 import java.io.IOException;
 
-public abstract class NetClientConnector<T> {
+public abstract class NetConnector<T> {
     /**
      * 配置
      */
@@ -11,7 +11,7 @@ public abstract class NetClientConnector<T> {
     /**
      * 构建函数
      * */
-    public NetClientConnector(Config<T> config){
+    public NetConnector(Config<T> config){
         this.config = config;
     }
 
@@ -19,7 +19,7 @@ public abstract class NetClientConnector<T> {
     /**
      * 连接
      */
-    public abstract NetClientConnector<T> connection() throws IOException;
+    public abstract NetConnector<T> connection() throws IOException;
 
     /**
      * 发送

@@ -10,14 +10,14 @@ public final class FineIO {
     }
 
     public static <T> NetClient<T> client(Protocol<T> protocol, Config<T> cfg) {
-        return new NetClient(protocol, cfg, new NetClientConnectorFactory<T>() {
+        return new NetClient(protocol, cfg, new NetConnectorFactory<T>() {
             @Override
-            public NetClientConnector<T> create(Config cfg) throws Throwable {
+            public NetConnector<T> create(Config cfg) throws Throwable {
                 return new NioTcpClientConnector<T>(cfg).connection();
             }
 
             @Override
-            public NetClientConnector<T> check(NetClientConnector<T> r) {
+            public NetConnector<T> check(NetConnector<T> r) {
                 if (r.isValid()) {
                     return r;
                 } else {
