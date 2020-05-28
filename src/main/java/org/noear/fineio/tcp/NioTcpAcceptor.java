@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class NioTcpAcceptor<T> {
+    private static final String broken_pipe ="Broken pipe";
     //缓冲
     private final ThreadLocal<ByteBuffer> thReadBuffer;
     //临时缓冲（用于转移半包内容）
@@ -23,15 +24,15 @@ public class NioTcpAcceptor<T> {
     public NioTcpAcceptor(Config<T> config, boolean pools) {
         this.config = config;
 
-        thReadBuffer = ThreadLocal.withInitial(()-> ByteBuffer.allocateDirect(config.getBufferSize()));
-        thReadBufferTmp = ThreadLocal.withInitial(()-> ByteBuffer.allocateDirect(config.getBufferSize()));
+        thReadBuffer = ThreadLocal.withInitial(() -> ByteBuffer.allocateDirect(config.getBufferSize()));
+        thReadBufferTmp = ThreadLocal.withInitial(() -> ByteBuffer.allocateDirect(config.getBufferSize()));
 
-        if(pools){
+        if (pools) {
             executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
         }
     }
 
-    public void accept(SelectionKey key, Selector selector) throws IOException{
+    public void accept(SelectionKey key, Selector selector) throws IOException {
         if (executors == null) {
             accept0(key, selector);
         } else {
@@ -52,29 +53,50 @@ public class NioTcpAcceptor<T> {
         if (sc != null) {
             sc.setOption(StandardSocketOptions.SO_KEEPALIVE, Boolean.TRUE);
             sc.configureBlocking(false);
-            sc.register(selector, SelectionKey.OP_READ);
+            sc.register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE);
         }
     }
 
-    public void read(SelectionKey key) throws IOException {
+    public void read(SelectionKey key) {
         if (executors == null) {
-            read0(key);
+            read1(key);
         } else {
             executors.submit(() -> {
-                try {
-                    read0(key);
-                }
-                catch (ClosedChannelException ex){
-                    key.cancel();
-                }
-                catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+                read1(key);
             });
         }
     }
 
-    private void read0(SelectionKey key) throws IOException{
+    private void read1(SelectionKey key) {
+        try {
+            read0(key);
+        } catch (ClosedChannelException ex) {
+            close0(key);
+        } catch (IOException ex) {
+            if(broken_pipe.equals(ex.getMessage())) {
+                close0(key);
+            }else{
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private void close0(SelectionKey key) {
+        if (key == null) {
+            return;
+        }
+
+        if (key.channel() != null) {
+            try {
+                key.channel().close();
+            } catch (Exception ex2) {
+            }
+        }
+
+        key.cancel();
+    }
+
+    private void read0(SelectionKey key) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
 
         int size = -1;
@@ -116,12 +138,11 @@ public class NioTcpAcceptor<T> {
 
                         try {
                             config.getHandler().handle(session, message);
-                        }
-                        catch (ClosedChannelException ex){
-                            key.channel();
-                            sc.close();
-                        }
-                        catch (Throwable ex) {
+                        } catch (ClosedChannelException ex) {
+                            throw ex;
+                        } catch (IOException ex) {
+                            throw ex;
+                        } catch (Throwable ex) {
                             ex.printStackTrace();
                         }
                     }

@@ -5,7 +5,6 @@ import org.noear.fineio.core.NetServer;
 import org.noear.fineio.core.Protocol;
 
 import java.io.IOException;
-import java.net.StandardSocketOptions;
 import java.nio.channels.*;
 import java.util.Iterator;
 
@@ -68,9 +67,6 @@ public class NioTcpServer<T> extends NetServer<T> {
 
                     try {
                         selectDo(key);
-                    }
-                    catch (ClosedChannelException ex){
-                        key.cancel();
                     }
                     catch (Throwable ex) {
                         ex.printStackTrace();
