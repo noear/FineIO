@@ -10,9 +10,9 @@ public abstract class NetServer<T> {
     /**
      * 配置
      * */
-    protected final Config<T> config;
+    protected final IoConfig<T> config;
 
-    public NetServer(Config<T> config){
+    public NetServer(IoConfig<T> config){
         this.config = config;
     }
 

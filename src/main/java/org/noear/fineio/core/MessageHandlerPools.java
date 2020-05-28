@@ -15,7 +15,7 @@ public class MessageHandlerPools<T> implements MessageHandler<T> {
     @Override
     public void handle(NetSession<T> session, T message) throws Throwable{
         executors.execute(()->{
-            NetRunner.run(()->{
+            IoRunner.run(()->{
                 handler.handle(session, message);
             },()->{
                 session.close();

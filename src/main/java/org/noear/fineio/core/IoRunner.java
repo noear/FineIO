@@ -5,11 +5,11 @@ import org.noear.fineio.core.utils.RunnableEx;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 
-public class NetRunner {
+public class IoRunner {
     private static final String err_broken_pipe ="Broken pipe";
     private static final String err_protocol_wrong = "Protocol wrong type for socket";
 
-    public static void run(RunnableEx<Throwable> runnable){
+    private static void run(RunnableEx<Throwable> runnable){
         if(runnable == null){
             return;
         }

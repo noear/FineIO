@@ -2,7 +2,7 @@ package org.noear.fineio.core;
 
 import java.net.InetSocketAddress;
 
-public class Config<T> {
+public class IoConfig<T> {
     /**
      * 代理
      * */

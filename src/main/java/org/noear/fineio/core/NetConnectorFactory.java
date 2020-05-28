@@ -1,7 +1,7 @@
 package org.noear.fineio.core;
 
 public interface NetConnectorFactory<T>  {
-    NetConnector<T> create(Config<T> cfg) throws Throwable;
+    NetConnector<T> create(IoConfig<T> cfg) throws Throwable;
 
     default NetConnector<T> check(NetConnector<T> r){
         return r;

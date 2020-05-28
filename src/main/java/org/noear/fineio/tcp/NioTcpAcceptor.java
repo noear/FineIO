@@ -1,8 +1,8 @@
 package org.noear.fineio.tcp;
 
-import org.noear.fineio.core.Config;
+import org.noear.fineio.core.IoConfig;
 import org.noear.fineio.core.NetSession;
-import org.noear.fineio.core.NetRunner;
+import org.noear.fineio.core.IoRunner;
 
 import java.io.IOException;
 import java.net.StandardSocketOptions;
@@ -18,11 +18,11 @@ public class NioTcpAcceptor<T> {
     //临时缓冲（用于转移半包内容）
     private final ThreadLocal<ByteBuffer> thReadBufferTmp;
 
-    private final Config<T> config;
+    private final IoConfig<T> config;
     private ExecutorService executors;
 
 
-    public NioTcpAcceptor(Config<T> config, boolean pools) {
+    public NioTcpAcceptor(IoConfig<T> config, boolean pools) {
         this.config = config;
 
         thReadBuffer = ThreadLocal.withInitial(() -> ByteBuffer.allocateDirect(config.getBufferSize()));
@@ -69,7 +69,7 @@ public class NioTcpAcceptor<T> {
     }
 
     private void read1(SelectionKey key) {
-        NetRunner.run(() -> {
+        IoRunner.run(() -> {
             read0(key);
         }, () -> {
             close0(key);

@@ -10,13 +10,13 @@ import java.net.InetSocketAddress;
  * */
 public class NetClient<T> {
     private ResourcePool<NetConnector<T>> connectors;
-    private final Config<T> config;
+    private final IoConfig<T> config;
 
     public NetClient(Protocol<T> protocol, NetConnectorFactory<T> connectorFactory) {
-        this(protocol, new Config<T>(), connectorFactory);
+        this(protocol, new IoConfig<T>(), connectorFactory);
     }
 
-    public NetClient(Protocol<T> protocol, Config<T> cfg, NetConnectorFactory<T> connectorFactory) {
+    public NetClient(Protocol<T> protocol, IoConfig<T> cfg, NetConnectorFactory<T> connectorFactory) {
         this.config = cfg;
         this.config.setProtocol(protocol);
 
@@ -43,7 +43,7 @@ public class NetClient<T> {
         });
     }
 
-    public Config<T> config() {
+    public IoConfig<T> config() {
         return this.config;
     }
 
