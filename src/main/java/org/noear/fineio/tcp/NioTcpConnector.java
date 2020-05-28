@@ -105,6 +105,9 @@ public class NioTcpConnector<T> extends NetConnector<T> {
 
     @Override
     public void send(T message) throws IOException {
+        if(message == null){
+            return;
+        }
 
         if (connectionFuture != null) {
             try {

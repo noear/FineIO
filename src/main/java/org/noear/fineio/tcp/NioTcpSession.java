@@ -22,6 +22,10 @@ public class NioTcpSession<T> extends NetSession<T> {
      * */
     @Override
     public void write(T message) throws IOException {
+        if(message == null){
+            return;
+        }
+
         if(isValid()) {
             ByteBuffer buf = _protocol.encode(message);
             _channel.write(buf);
