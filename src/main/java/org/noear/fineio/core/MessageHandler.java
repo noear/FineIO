@@ -10,7 +10,7 @@ public interface MessageHandler<T> {
     /**
      * 线程池模式
      * */
-    default MessageHandlerPool<T> pools() {
-        return new MessageHandlerPool<T>(this);
+    default MessageHandlerPools<T> pools() {
+        return new MessageHandlerPools<T>(this);
     }
 }
