@@ -2,6 +2,7 @@ package org.noear.fineio.tcp;
 
 import org.noear.fineio.core.Config;
 import org.noear.fineio.core.NetSession;
+import org.noear.fineio.core.NetRunner;
 
 import java.io.IOException;
 import java.net.StandardSocketOptions;
@@ -11,8 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class NioTcpAcceptor<T> {
-    private static final String err_broken_pipe ="Broken pipe";
-    private static final String err_protocol_wrong = "Protocol wrong type for socket";
+
     //缓冲
     private final ThreadLocal<ByteBuffer> thReadBuffer;
     //临时缓冲（用于转移半包内容）
@@ -69,17 +69,11 @@ public class NioTcpAcceptor<T> {
     }
 
     private void read1(SelectionKey key) {
-        try {
+        NetRunner.run(() -> {
             read0(key);
-        } catch (ClosedChannelException ex) {
+        }, () -> {
             close0(key);
-        } catch (IOException ex) {
-            if(err_broken_pipe.equals(ex.getMessage()) || err_protocol_wrong.equals(ex.getMessage())) {
-                close0(key);
-            }else{
-                ex.printStackTrace();
-            }
-        }
+        });
     }
 
     private void close0(SelectionKey key) {

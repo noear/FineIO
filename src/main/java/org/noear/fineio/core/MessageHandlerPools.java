@@ -15,11 +15,11 @@ public class MessageHandlerPools<T> implements MessageHandler<T> {
     @Override
     public void handle(NetSession<T> session, T message) throws Throwable{
         executors.execute(()->{
-            try {
+            NetRunner.run(()->{
                 handler.handle(session, message);
-            }catch (Throwable ex){
-                ex.printStackTrace();
-            }
+            },()->{
+                session.close();
+            });
         });
     }
 
