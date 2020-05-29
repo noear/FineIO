@@ -56,15 +56,15 @@ public class NioTcpAcceptor<T> {
 
     public void read(SelectionKey key) {
         if (executors == null) {
-            readDo(key);
+            read1(key);
         } else {
             executors.submit(() -> {
-                readDo(key);
+                read1(key);
             });
         }
     }
 
-    private void readDo(SelectionKey key) {
+    private void read1(SelectionKey key) {
         IoRunner.run(() -> {
             read0(key);
         }, () -> {
@@ -80,8 +80,7 @@ public class NioTcpAcceptor<T> {
         if (key.channel() != null) {
             try {
                 key.channel().close();
-            } catch (Exception ex2) {
-            }
+            } catch (Exception ex2) {}
         }
 
         key.cancel();
@@ -89,19 +88,18 @@ public class NioTcpAcceptor<T> {
 
     private void read0(SelectionKey key) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
-
         int size = -1;
 
         if (config.getHandler() != null) {
-            ByteBuffer readBuffer = thReadBuffer.get();
-
             //
             //如果有代理?
             //
+            ByteBuffer readBuffer = thReadBuffer.get();
             bufferClear(readBuffer);
 
             while ((size = sc.read(readBuffer)) > 0) {
-                read1(sc, readBuffer);
+                readBuffer.flip();
+                read00(sc, readBuffer);
             }
         }
 
@@ -111,10 +109,8 @@ public class NioTcpAcceptor<T> {
         }
     }
 
-    private void read1(SocketChannel sc, ByteBuffer readBuffer) throws IOException {
+    private void read00(SocketChannel sc, ByteBuffer readBuffer) throws IOException {
         while (readBuffer.hasRemaining()) {
-            readBuffer.flip();
-
             //尝试多次解码
             //
             T message = config.getProtocol().decode(readBuffer);
@@ -134,24 +130,41 @@ public class NioTcpAcceptor<T> {
                 } catch (Throwable ex) {
                     ex.printStackTrace();
                 }
+            }else{
+                //
+                //说明是半包；跳出到下个处理周期
+                //
+                break;
             }
         }
 
         //数据读取完毕
-        if (readBuffer.remaining() == 0) {
+        if (readBuffer.remaining() == 0) { //如果 limit == position
             bufferClear(readBuffer);
         } else if (readBuffer.position() > 0) {
             //半包，移位，接着读
             readBuffer.compact();
+            readBuffer.limit(readBuffer.capacity());//恢复后面的容器
         } else {
+            //limit != position && position = 0
+            //
             readBuffer.position(readBuffer.limit());
-            readBuffer.limit(readBuffer.capacity());
+            readBuffer.limit(readBuffer.capacity()); //让后面的容量可写
         }
 
-        //读缓冲区已满
+        //读缓冲区已满 //没有可操作容量了
         if (!readBuffer.hasRemaining()) {
             throw new RuntimeException("ReadBuffer overflow");
         }
+
+        /**
+         * position：当前位
+         * limit：限制位
+         * capacity：总容量
+         * compact()：压缩，去掉已读的内容
+         * remaining()：可操作容量；limit - position
+         * hasRemaining()：可操作？
+         * */
     }
 
     private void bufferClear(ByteBuffer buf) {

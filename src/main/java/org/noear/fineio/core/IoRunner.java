@@ -8,6 +8,7 @@ import java.nio.channels.ClosedChannelException;
 public class IoRunner {
     private static final String err_broken_pipe ="Broken pipe";
     private static final String err_protocol_wrong = "Protocol wrong type for socket";
+    private static final String err_connection_reset = "Connection reset by peer";
 
     private static void run(RunnableEx<Throwable> runnable){
         if(runnable == null){
@@ -25,13 +26,15 @@ public class IoRunner {
         } catch (ClosedChannelException ex) {
             run(onClosed);
         } catch (IOException ex) {
-            if(err_broken_pipe.equals(ex.getMessage()) || err_protocol_wrong.equals(ex.getMessage())) {
+            if(err_broken_pipe.equals(ex.getMessage())
+                    || err_protocol_wrong.equals(ex.getMessage())
+                    || err_connection_reset.equals(ex.getMessage())) {
                 run(onClosed);
             }else{
-                ex.printStackTrace();
+                //ex.printStackTrace();
             }
         } catch (Throwable ex){
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
 }
