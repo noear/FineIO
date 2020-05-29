@@ -9,7 +9,7 @@ public class ServerTest {
         //定义代理
         //
         MessageHandler<String> handler = (session, message)->{
-                System.out.println(Thread.currentThread().getName() +"服务端收到：" + message);
+                //System.out.println(Thread.currentThread().getName() +"服务端收到：" + message);
                 //Thread.sleep(10);
                 session.write(message);
         };
