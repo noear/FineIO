@@ -106,18 +106,16 @@ public class NioTcpConnector<T> extends NetConnector<T> {
 
     @Override
     public void send(T message) {
-        if(message == null){
+        if (message == null) {
             return;
         }
 
         wait0();
 
         try {
-            synchronized (channel) {
-                ByteBuffer buf = config.getProtocol().encode(message);
-                channel.write(buf);
-            }
-        }catch (IOException ex){
+            ByteBuffer buf = config.getProtocol().encode(message);
+            channel.write(buf);
+        } catch (IOException ex) {
             throw new FineException(ex);
         }
     }
