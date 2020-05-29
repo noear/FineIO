@@ -20,12 +20,16 @@ public class NioTcpConnector<T> extends NetConnector<T> {
     private Selector selector;
     private SocketChannel channel;
     private final NioTcpAcceptor<T> acceptor;
-
+    private final ByteBuffer writeBuffer;
+    private final int writeBufferLimit;
 
     public NioTcpConnector(IoConfig<T> config){
         super(config);
         this.connectionFuture = new CompletableFuture<>();
         this.acceptor = new NioTcpAcceptor<>(config, false);
+
+        this.writeBuffer = ByteBuffer.allocateDirect(config.getBufferSize());
+        this.writeBufferLimit = config.getBufferSize() / 2;
     }
 
     public NetConnector<T> connection() throws IOException {
@@ -46,7 +50,6 @@ public class NioTcpConnector<T> extends NetConnector<T> {
 
         return this;
     }
-
 
     private void startDo(){
         while (!colsed){
@@ -113,11 +116,30 @@ public class NioTcpConnector<T> extends NetConnector<T> {
         wait0();
 
         try {
-            ByteBuffer buf = config.getProtocol().encode(message);
-            channel.write(buf);
+            synchronized (writeBuffer) {
+                ByteBuffer buf = config.getProtocol().encode(message);
+                if (buf.remaining() >= writeBufferLimit) {
+                    push0();
+
+                    channel.write(buf);
+                } else {
+                    writeBuffer.put(buf);
+
+                    if (writeBuffer.position() >= writeBufferLimit) {
+                        push0();
+                    }
+                }
+            }
         } catch (IOException ex) {
             throw new FineException(ex);
         }
+    }
+
+    private void push0() throws IOException{
+        writeBuffer.flip();
+        channel.write(writeBuffer);
+        writeBuffer.position(0);
+        writeBuffer.limit(writeBuffer.capacity());
     }
 
     private void wait0() {

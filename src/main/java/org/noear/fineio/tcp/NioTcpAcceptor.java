@@ -88,6 +88,7 @@ public class NioTcpAcceptor<T> {
 
     private void read0(SelectionKey key) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
+        NetSession<T> session = new NioTcpSession<>(sc, config);
         int size = -1;
 
         if (config.getHandler() != null) {
@@ -99,7 +100,7 @@ public class NioTcpAcceptor<T> {
 
             while ((size = sc.read(readBuffer)) > 0) {
                 readBuffer.flip();
-                read00(sc, readBuffer);
+                read00(sc, session, readBuffer);
             }
         }
 
@@ -109,7 +110,7 @@ public class NioTcpAcceptor<T> {
         }
     }
 
-    private void read00(SocketChannel sc, ByteBuffer readBuffer) throws IOException {
+    private void read00(SocketChannel sc,NetSession<T> session ,ByteBuffer readBuffer) throws IOException {
         while (readBuffer.hasRemaining()) {
             //尝试多次解码
             //
@@ -119,7 +120,7 @@ public class NioTcpAcceptor<T> {
                 //
                 //如果message没有问题，则执行处理
                 //
-                NetSession<T> session = new NioTcpSession<>(sc, config.getProtocol());
+
 
                 try {
                     config.getHandler().handle(session, message);

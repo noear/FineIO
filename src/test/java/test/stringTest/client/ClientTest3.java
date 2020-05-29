@@ -3,7 +3,6 @@ package test.stringTest.client;
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageHandler;
 import org.noear.fineio.core.NetClient;
-import org.noear.fineio.core.NetConnector;
 import org.noear.fineio.core.Sender;
 import test.stringTest.StringProtocol;
 
@@ -40,7 +39,7 @@ public class ClientTest3 {
 
     private static void test(NetClient<String> client) throws IOException{
         StringBuffer sb = new StringBuffer();
-        Sender<String> sender = client;//.getConnector();
+        Sender<String> sender = client.getConnector();
 
         while (true) {
             sb.setLength(0);
