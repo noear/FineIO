@@ -8,7 +8,7 @@ import java.net.InetSocketAddress;
 /**
  * 网络客户端
  * */
-public class NetClient<T> {
+public class NetClient<T> implements Sender<T>{
     private ResourcePool<NetConnector<T>> connectors;
     private final IoConfig<T> config;
 
@@ -83,11 +83,7 @@ public class NetClient<T> {
         if (c != null) {
             try {
                 c.send(message);
-            }
-            catch (IOException ex){
-                throw new FineException(ex);
-            }
-            finally {
+            } finally {
                 connectors.free();
             }
         } else {

@@ -3,6 +3,8 @@ package test.stringTest.client;
 import org.noear.fineio.FineIO;
 import org.noear.fineio.core.MessageHandler;
 import org.noear.fineio.core.NetClient;
+import org.noear.fineio.core.NetConnector;
+import org.noear.fineio.core.Sender;
 import test.stringTest.StringProtocol;
 
 import java.io.IOException;
@@ -38,6 +40,8 @@ public class ClientTest3 {
 
     private static void test(NetClient<String> client) throws IOException{
         StringBuffer sb = new StringBuffer();
+        Sender<String> sender = client;//.getConnector();
+
         while (true) {
             sb.setLength(0);
             int num = (int) (Math.random() * 10) + 1;
@@ -46,7 +50,7 @@ public class ClientTest3 {
                 sb.append("FineIO");
             }
 
-            client.send(sb.toString());
+            sender.send(sb.toString());
         }
     }
 }

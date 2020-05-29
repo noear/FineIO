@@ -1,5 +1,6 @@
 package org.noear.fineio.tcp;
 
+import org.noear.fineio.FineException;
 import org.noear.fineio.core.NetConnector;
 import org.noear.fineio.core.IoConfig;
 
@@ -104,29 +105,37 @@ public class NioTcpConnector<T> extends NetConnector<T> {
     }
 
     @Override
-    public void send(T message) throws IOException {
+    public void send(T message) {
         if(message == null){
             return;
         }
 
+        wait0();
+
+        try {
+            synchronized (channel) {
+                ByteBuffer buf = config.getProtocol().encode(message);
+                channel.write(buf);
+            }
+        }catch (IOException ex){
+            throw new FineException(ex);
+        }
+    }
+
+    private void wait0() {
         if (connectionFuture != null) {
             try {
                 connectionFuture.get(config.getConnectionTimeout(), TimeUnit.SECONDS);
                 connectionFuture = null;
             } catch (Exception ex) {
-                throw new IOException("Connection timeout!");
+                throw new FineException("Connection timeout!");
             }
-
-        }
-
-        synchronized (channel) {
-            ByteBuffer buf = config.getProtocol().encode(message);
-            channel.write(buf);
         }
     }
 
     @Override
     public boolean isValid() {
+        wait0();
         return channel.isOpen();
     }
 

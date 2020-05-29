@@ -2,7 +2,7 @@ package org.noear.fineio.core;
 
 import java.io.IOException;
 
-public abstract class NetConnector<T> {
+public abstract class NetConnector<T> implements Sender<T>{
     /**
      * 配置
      */
@@ -24,7 +24,7 @@ public abstract class NetConnector<T> {
     /**
      * 发送
      */
-    public abstract void send(T message) throws IOException;
+    public abstract void send(T message);
 
 
     /**
