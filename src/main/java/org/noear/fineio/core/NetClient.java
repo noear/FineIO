@@ -20,7 +20,7 @@ public class NetClient<T> implements Sender<T>{
         this.config = cfg;
         this.config.setProtocol(protocol);
 
-        this.connectors = new ResourcePool<>(Runtime.getRuntime().availableProcessors() * 2, new ResourceFactory<NetConnector<T>>() {
+        this.connectors = new ResourcePool<>(Runtime.getRuntime().availableProcessors() * 2 + 1, new ResourceFactory<NetConnector<T>>() {
             @Override
             public NetConnector<T> create() throws Throwable {
                 return connectorFactory.create(config);

@@ -25,7 +25,7 @@ public class NioTcpAcceptor<T> {
         thReadBuffer = ThreadLocal.withInitial(() -> ByteBuffer.allocateDirect(config.getBufferSize()));
 
         if (pools) {
-            executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+            executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2 + 1);
         }
     }
 
