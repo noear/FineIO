@@ -16,8 +16,8 @@ public class NioWriteBuffer<T> {
         this.config = config;
         this.channel = channel;
 
-        buffer = ByteBuffer.allocateDirect(config.getBufferSize());
-        bufferLimit = config.getBufferSize() / 2;
+        buffer = ByteBuffer.allocateDirect(config.getWriteBufferSize());
+        bufferLimit = config.getWriteBufferSize() / 2;
     }
 
     public void write(T message) throws IOException{

@@ -22,7 +22,7 @@ public class NioTcpAcceptor<T> {
     public NioTcpAcceptor(IoConfig<T> config, boolean pools) {
         this.config = config;
 
-        thReadBuffer = ThreadLocal.withInitial(() -> ByteBuffer.allocateDirect(config.getBufferSize()));
+        thReadBuffer = ThreadLocal.withInitial(() -> ByteBuffer.allocateDirect(config.getReadBufferSize()));
 
         if (pools) {
             executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2 + 1);

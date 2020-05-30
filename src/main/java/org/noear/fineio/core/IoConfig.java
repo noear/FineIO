@@ -22,9 +22,13 @@ public class IoConfig<T> {
     private int connectionTimeout = 60;
 
     /**
-     * 缓存大小（默认1024）
+     * 读缓存大小（默认1024）
      * */
-    private int bufferSize = 1024;
+    private int readBufferSize = 1024;
+    /**
+     * 写缓存大小（默认1024）
+     * */
+    private int writeBufferSize = 1024;
 
 
 
@@ -40,9 +44,11 @@ public class IoConfig<T> {
     public int getConnectionTimeout() {
         return connectionTimeout;
     }
-
-    public int getBufferSize() {
-        return bufferSize;
+    public int getReadBufferSize() {
+        return readBufferSize;
+    }
+    public int getWriteBufferSize() {
+        return writeBufferSize;
     }
 
     public void setHandler(MessageHandler<T> handler) {
@@ -61,12 +67,13 @@ public class IoConfig<T> {
             setAddress(new InetSocketAddress(hostname, port));
         }
     }
-
     public void setConnectionTimeout(int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }
-
-    public void setBufferSize(int bufferSize) {
-        this.bufferSize = bufferSize;
+    public void setReadBufferSize(int readBufferSize) {
+        this.readBufferSize = readBufferSize;
+    }
+    public void setWriteBufferSize(int writeBufferSize) {
+        this.writeBufferSize = writeBufferSize;
     }
 }
