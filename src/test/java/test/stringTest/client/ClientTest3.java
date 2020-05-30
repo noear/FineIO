@@ -1,6 +1,7 @@
 package test.stringTest.client;
 
 import org.noear.fineio.FineIO;
+import org.noear.fineio.core.IoConfig;
 import org.noear.fineio.core.MessageHandler;
 import org.noear.fineio.core.NetClient;
 import org.noear.fineio.core.Sender;
@@ -18,6 +19,8 @@ public class ClientTest3 {
 
         //定义客户端
         //
+        IoConfig<String> cfg  =new IoConfig<>();
+        //cfg.setWriteBufferSize(1024 * 1024);
         NetClient<String> client = FineIO.client(new StringProtocol()).handle(handler).bind("localhost", 8888);
 
         //测试（请选启动服务端）
@@ -38,7 +41,7 @@ public class ClientTest3 {
     }
 
     private static void test(NetClient<String> client) throws IOException{
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer(1024);
         Sender<String> sender = client.getConnector();
 
         while (true) {
@@ -46,7 +49,7 @@ public class ClientTest3 {
             int num = (int) (Math.random() * 10) + 1;
 
             while (num-- > 0) {
-                sb.append("FineIO");
+                sb.append("Hello-FineIO");
             }
 
             sender.send(sb.toString());
