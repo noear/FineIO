@@ -7,8 +7,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
 public class NioWriteBuffer<T> {
-    private final ByteBuffer writeBuffer;
-    private final int writeBufferLimit;
+    private final ByteBuffer buffer;
+    private final int bufferLimit;
     private IoConfig<T> config;
     private SocketChannel channel;
 
@@ -16,22 +16,23 @@ public class NioWriteBuffer<T> {
         this.config = config;
         this.channel = channel;
 
-        writeBuffer = ByteBuffer.allocateDirect(config.getBufferSize());
-        writeBufferLimit = config.getBufferSize() / 2;
+        buffer = ByteBuffer.allocateDirect(config.getBufferSize());
+        bufferLimit = config.getBufferSize() / 2;
     }
 
     public void write(T message) throws IOException{
-        synchronized (writeBuffer) {
+        synchronized (buffer) {
             byte[] bytes = config.getProtocol().encode(message);
-            if (bytes.length >= writeBufferLimit) {
-                writeBuffer.putInt(bytes.length);
+            if (bytes.length >= bufferLimit) {
+                buffer.putInt(bytes.length);
                 push0();
+
                 channel.write(ByteBuffer.wrap(bytes));
             } else {
-                writeBuffer.putInt(bytes.length);
-                writeBuffer.put(bytes);
+                buffer.putInt(bytes.length);
+                buffer.put(bytes);
 
-                if (writeBuffer.position() >= writeBufferLimit) {
+                if (buffer.position() >= bufferLimit) {
                     push0();
                 }
             }
@@ -39,9 +40,10 @@ public class NioWriteBuffer<T> {
     }
 
     private void push0() throws IOException {
-        writeBuffer.flip();
-        channel.write(writeBuffer);
-        writeBuffer.position(0);
-        writeBuffer.limit(writeBuffer.capacity());
+        buffer.flip();
+        channel.write(buffer);
+
+        buffer.position(0);
+        buffer.limit(buffer.capacity());
     }
 }
