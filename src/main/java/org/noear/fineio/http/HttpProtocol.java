@@ -11,7 +11,7 @@ public class HttpProtocol implements Protocol<HttpEntity> {
     }
 
     @Override
-    public ByteBuffer encode(HttpEntity meaage) {
+    public byte[] encode(HttpEntity meaage) {
         return null;
     }
 }

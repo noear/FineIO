@@ -13,7 +13,7 @@ public class ClientTest3 {
         long time_start = System.currentTimeMillis();
 
         MessageHandler<String> handler = (session, message) -> {
-            //System.out.println(Thread.currentThread().getName() + "-客户端-收到：" + message + " -- " + (System.currentTimeMillis() - time_start));
+            System.out.println(Thread.currentThread().getName() + "-客户端-收到：" + message + " -- " + (System.currentTimeMillis() - time_start));
         };
 
         //定义客户端

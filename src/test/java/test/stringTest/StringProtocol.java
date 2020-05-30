@@ -24,15 +24,7 @@ public class StringProtocol implements Protocol<String> {
     }
 
     @Override
-    public ByteBuffer encode(String message) {
-        byte[] bytes = message.getBytes();
-
-        ByteBuffer buf = ByteBuffer.allocateDirect(bytes.length + Integer.BYTES);
-
-        buf.putInt(bytes.length);
-        buf.put(bytes);
-        buf.flip();
-
-        return buf;
+    public byte[] encode(String message) {
+        return message.getBytes();
     }
 }

@@ -117,13 +117,14 @@ public class NioTcpConnector<T> extends NetConnector<T> {
 
         try {
             synchronized (writeBuffer) {
-                ByteBuffer buf = config.getProtocol().encode(message);
-                if (buf.remaining() >= writeBufferLimit) {
+                byte[] bytes = config.getProtocol().encode(message);
+                if (bytes.length >= writeBufferLimit) {
+                    writeBuffer.putInt(bytes.length);
                     push0();
-
-                    channel.write(buf);
+                    channel.write(ByteBuffer.wrap(bytes));
                 } else {
-                    writeBuffer.put(buf);
+                    writeBuffer.putInt(bytes.length);
+                    writeBuffer.put(bytes);
 
                     if (writeBuffer.position() >= writeBufferLimit) {
                         push0();

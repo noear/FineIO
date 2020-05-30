@@ -7,5 +7,5 @@ import java.nio.ByteBuffer;
  * */
 public interface Protocol<T> {
     T decode(final ByteBuffer buffer);
-    ByteBuffer encode(T meaage);
+    byte[] encode(T meaage);
 }
