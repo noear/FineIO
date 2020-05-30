@@ -5,7 +5,6 @@ import org.noear.fineio.core.NetConnector;
 import org.noear.fineio.core.IoConfig;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -19,17 +18,13 @@ public class NioTcpConnector<T> extends NetConnector<T> {
 
     private Selector selector;
     private SocketChannel channel;
+    private NioWriteBuffer<T> writeBuffer;
     private final NioTcpAcceptor<T> acceptor;
-    private final ByteBuffer writeBuffer;
-    private final int writeBufferLimit;
 
     public NioTcpConnector(IoConfig<T> config){
         super(config);
         this.connectionFuture = new CompletableFuture<>();
         this.acceptor = new NioTcpAcceptor<>(config, false);
-
-        this.writeBuffer = ByteBuffer.allocateDirect(config.getBufferSize());
-        this.writeBufferLimit = config.getBufferSize() / 2;
     }
 
     public NetConnector<T> connection() throws IOException {
@@ -37,6 +32,8 @@ public class NioTcpConnector<T> extends NetConnector<T> {
 
         channel = SocketChannel.open();
         channel.configureBlocking(false);
+
+        writeBuffer = new NioWriteBuffer<T>(config,channel);
 
         //尝试连接
         if(channel.connect(config.getAddress())){
@@ -116,31 +113,10 @@ public class NioTcpConnector<T> extends NetConnector<T> {
         wait0();
 
         try {
-            synchronized (writeBuffer) {
-                byte[] bytes = config.getProtocol().encode(message);
-                if (bytes.length >= writeBufferLimit) {
-                    writeBuffer.putInt(bytes.length);
-                    push0();
-                    channel.write(ByteBuffer.wrap(bytes));
-                } else {
-                    writeBuffer.putInt(bytes.length);
-                    writeBuffer.put(bytes);
-
-                    if (writeBuffer.position() >= writeBufferLimit) {
-                        push0();
-                    }
-                }
-            }
+            writeBuffer.write(message);
         } catch (IOException ex) {
             throw new FineException(ex);
         }
-    }
-
-    private void push0() throws IOException{
-        writeBuffer.flip();
-        channel.write(writeBuffer);
-        writeBuffer.position(0);
-        writeBuffer.limit(writeBuffer.capacity());
     }
 
     private void wait0() {
