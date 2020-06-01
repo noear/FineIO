@@ -20,8 +20,8 @@ public class ClientTest3 {
         //定义客户端
         //
         IoConfig<String> cfg  =new IoConfig<>();
-        //cfg.setWriteBufferSize(1024 * 1024);
-        NetClient<String> client = FineIO.client(new StringProtocol()).handle(handler).bind("localhost", 8888);
+        cfg.setWriteBufferSize(1024 * 3);
+        NetClient<String> client = FineIO.client(new StringProtocol(), cfg).handle(handler).bind("localhost", 8888);
 
         //测试（请选启动服务端）
         //
