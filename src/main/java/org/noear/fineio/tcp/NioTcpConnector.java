@@ -113,7 +113,7 @@ public class NioTcpConnector<T> extends NetConnector<T> {
         wait0();
 
         try {
-            writeBuffer.write(message);
+            writeBuffer.writeMessage(message);
         } catch (IOException ex) {
             throw new FineException(ex);
         }

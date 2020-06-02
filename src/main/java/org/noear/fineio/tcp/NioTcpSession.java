@@ -29,7 +29,7 @@ public class NioTcpSession<T> extends NetSession<T> {
         }
 
         if(isValid()) {
-            writeBuffer.write(message);
+            writeBuffer.writeMessage(message);
         }
     }
 
