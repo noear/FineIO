@@ -3,11 +3,10 @@ package org.noear.fineio.tcp;
 import org.noear.fineio.core.IoConfig;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class NioWriteBuffer<T> extends OutputStream {
+public class NioWriteBuffer<T>  {
     private final ByteBuffer buffer;
     private final int bufferLimit;
     private IoConfig<T> config;
@@ -21,20 +20,21 @@ public class NioWriteBuffer<T> extends OutputStream {
         bufferLimit = config.getWriteBufferSize() / 2;
     }
 
-    public void writeMessage(T message) throws IOException {
-        byte[] bytes = config.getProtocol().encode(message);
-
-        if (bytes.length >= bufferLimit) {
-            buffer.putInt(bytes.length);
-            push0();
-
-            channel.write(ByteBuffer.wrap(bytes));
-        } else {
-            buffer.putInt(bytes.length);
-            buffer.put(bytes);
-
-            if (buffer.position() >= bufferLimit) {
+    public void write(T message) throws IOException{
+        synchronized (buffer) {
+            byte[] bytes = config.getProtocol().encode(message);
+            if (bytes.length >= bufferLimit) {
+                buffer.putInt(bytes.length);
                 push0();
+
+                channel.write(ByteBuffer.wrap(bytes));
+            } else {
+                buffer.putInt(bytes.length);
+                buffer.put(bytes);
+
+                if (buffer.position() >= bufferLimit) {
+                    push0();
+                }
             }
         }
     }
@@ -45,10 +45,5 @@ public class NioWriteBuffer<T> extends OutputStream {
 
         buffer.position(0);
         buffer.limit(buffer.capacity());
-    }
-
-    @Override
-    public void write(int b) throws IOException {
-
     }
 }

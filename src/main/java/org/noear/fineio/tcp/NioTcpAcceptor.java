@@ -47,6 +47,9 @@ public class NioTcpAcceptor<T> {
         ServerSocketChannel server = (ServerSocketChannel) key.channel();
         SocketChannel sc = server.accept();
 
+        NetSession<T> session = new NioTcpSession<>(sc, config);
+        key.attach(session);
+
         if (sc != null) {
             sc.setOption(StandardSocketOptions.SO_KEEPALIVE, Boolean.TRUE);
             sc.configureBlocking(false);
@@ -88,13 +91,14 @@ public class NioTcpAcceptor<T> {
 
     private void read0(SelectionKey key) throws IOException {
         SocketChannel sc = (SocketChannel) key.channel();
-        NetSession<T> session = new NioTcpSession<>(sc, config);
         int size = -1;
 
         if (config.getHandler() != null) {
             //
             //如果有代理?
             //
+            NetSession<T> session = (NetSession<T>)key.attachment();
+
             ByteBuffer readBuffer = thReadBuffer.get();
             bufferClear(readBuffer);
 

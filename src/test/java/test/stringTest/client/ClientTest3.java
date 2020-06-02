@@ -20,8 +20,8 @@ public class ClientTest3 {
         //定义客户端
         //
         IoConfig<String> cfg  =new IoConfig<>();
-        cfg.setWriteBufferSize(1024 * 3);
-        NetClient<String> client = FineIO.client(new StringProtocol(), cfg).handle(handler).bind("localhost", 8888);
+        //cfg.setWriteBufferSize(1024 * 3);
+
 
         //测试（请选启动服务端）
         //
@@ -30,7 +30,7 @@ public class ClientTest3 {
                 @Override
                 public void run() {
                     try {
-                        test(client);
+                        test();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -40,7 +40,9 @@ public class ClientTest3 {
         }
     }
 
-    private static void test(NetClient<String> client) throws IOException{
+    private static void test() throws IOException{
+        NetClient<String> client = FineIO.client(new StringProtocol()).handle((c,m)->{}).bind("localhost", 8888);
+
         StringBuffer sb = new StringBuffer(1024);
         Sender<String> sender = client.getConnector();
 

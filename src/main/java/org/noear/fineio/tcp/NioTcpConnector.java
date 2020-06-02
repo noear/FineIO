@@ -20,6 +20,7 @@ public class NioTcpConnector<T> extends NetConnector<T> {
     private SocketChannel channel;
     private NioWriteBuffer<T> writeBuffer;
     private final NioTcpAcceptor<T> acceptor;
+    private Object lock = "";
 
     public NioTcpConnector(IoConfig<T> config){
         super(config);
@@ -28,12 +29,18 @@ public class NioTcpConnector<T> extends NetConnector<T> {
     }
 
     public NetConnector<T> connection() throws IOException {
+        synchronized (lock) {
+            if (selector != null) {
+                return this;
+            }
+        }
+
         selector = Selector.open();
 
         channel = SocketChannel.open();
         channel.configureBlocking(false);
 
-        writeBuffer = new NioWriteBuffer<T>(config,channel);
+        writeBuffer = new NioWriteBuffer<T>(config, channel);
 
         //尝试连接
         if(channel.connect(config.getAddress())){
@@ -113,7 +120,7 @@ public class NioTcpConnector<T> extends NetConnector<T> {
         wait0();
 
         try {
-            writeBuffer.writeMessage(message);
+            writeBuffer.write(message);
         } catch (IOException ex) {
             throw new FineException(ex);
         }

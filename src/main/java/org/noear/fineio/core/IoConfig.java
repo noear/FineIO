@@ -26,9 +26,9 @@ public class IoConfig<T> {
      * */
     private int readBufferSize = 1024;
     /**
-     * 写缓存大小（默认1024）
+     * 写缓存大小（默认512）
      * */
-    private int writeBufferSize = 1024;
+    private int writeBufferSize = 512;
 
 
 
