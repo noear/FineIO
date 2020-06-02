@@ -78,12 +78,10 @@ public class ResourcePool<R> {
                 if (queue.isEmpty() == false) {
                     r = factory.check(queue.take());
                 }
+            }
 
-                if (r == null) {
-                    if (null != (r = create0())) {
-                        queue.offer(r);
-                    }
-                }
+            if(r == null) {
+                r = create0();
             }
 
             threadLocal.set(r);
